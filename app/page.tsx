@@ -467,7 +467,7 @@ export default function Home() {
                   Deja preparada tu orientacion
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-slate-600">
-                  Esta iteracion ya conecta los CTA de servicios con una seleccion previa dentro del bloque de contacto.
+                  Completa tus datos y cuentanos brevemente que apoyo necesitas para que podamos orientarte mejor.
                 </p>
 
                 <form className="mt-8 grid gap-5" onSubmit={handleFormSubmit}>

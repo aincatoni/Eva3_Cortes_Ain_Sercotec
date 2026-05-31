@@ -34,6 +34,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formMessage, setFormMessage] = useState<string | null>(null);
+  const [formStartedAt, setFormStartedAt] = useState(() => Date.now());
   const [formValues, setFormValues] = useState<ContactFormValues>(
     initialContactFormValues,
   );
@@ -134,7 +135,7 @@ export default function Home() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formValues),
+        body: JSON.stringify({...formValues, website: '', startedAt: formStartedAt}),
       });
 
       const json = (await response.json()) as {
@@ -155,6 +156,7 @@ export default function Home() {
 
       setFormValues(initialContactFormValues);
       setFormErrors({});
+      setFormStartedAt(Date.now());
       setFormMessage(json.message || "Solicitud enviada correctamente.");
     } catch {
       setFormMessage("No pudimos enviar tu solicitud. Intenta nuevamente.");
@@ -204,6 +206,7 @@ export default function Home() {
               formErrors={formErrors}
               formMessage={formMessage}
               isSubmitting={isSubmitting}
+              startedAt={formStartedAt}
               onSubmit={handleFormSubmit}
               onFieldChange={handleFieldChange}
               onFieldBlur={handleFieldBlur}

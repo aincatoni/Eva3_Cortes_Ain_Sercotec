@@ -21,6 +21,8 @@ La solución fue implementada con `Next.js`, `TypeScript`, `Tailwind CSS`, `Sani
 - creación de endpoints propios en `Next.js` para contenido y formulario
 - integración de `Supabase` para persistir solicitudes de contacto en la tabla `contact_requests`
 - validación cliente/servidor del formulario de contacto
+- refactor de la landing en componentes reutilizables por sección y por card
+- navegación desktop y mobile por anclas dentro de la misma landing
 - despliegue público del proyecto en `Vercel`
 
 ## Cómo revisar el proyecto
@@ -36,6 +38,7 @@ Desde esa URL se puede revisar:
 - despliegue público funcional
 - integración con el CMS
 - landing visual funcional
+- landing componentizada en secciones reutilizables
 - flujo real del formulario de contacto
 
 ### 2. Studio CMS
@@ -142,6 +145,26 @@ Con esto se cubren simultáneamente:
 - `Supabase`
 - `Vercel`
 
+## Componentización actual
+
+La landing ya no vive como una sola vista monolítica. La estructura principal fue separada en componentes para alinearse con el foco de la evaluación.
+
+Componentes principales actuales:
+
+- `components/SiteHeader.tsx`
+- `components/HeroSection.tsx`
+- `components/AboutSection.tsx`
+- `components/ServicesSection.tsx`
+- `components/ServiceCard.tsx`
+- `components/TestimonialsSection.tsx`
+- `components/FaqSection.tsx`
+- `components/LocationPointsSection.tsx`
+- `components/LocationPointCard.tsx`
+- `components/ContactFormSection.tsx`
+- `components/ContactFooter.tsx`
+
+Además, `app/page.tsx` quedó como componente ensamblador de estado, carga de datos y handlers del formulario.
+
 ## Estado actual del desarrollo
 
 Estado implementado:
@@ -152,6 +175,8 @@ Estado implementado:
 - endpoint `/api/contact` operativo
 - landing visual funcional conectada a `Sanity`
 - formulario conectado a `Supabase`
+- landing separada en componentes reutilizables
+- menú mobile implementado
 - modelado CMS ya definido para las secciones principales
 
 Pendiente de siguiente iteración:
@@ -204,6 +229,16 @@ Notas importantes:
 - `SUPABASE_SECRET_KEY` se usa solo en backend
 - `SUPABASE_SECRET_KEY` nunca debe exponerse con prefijo `NEXT_PUBLIC_`
 - `SUPABASE_PUBLISHABLE_KEY` quedó preparada para futuras integraciones cliente o panel admin si fuera necesario
+
+## Estructura general del proyecto
+
+Directorios principales usados actualmente:
+
+- `app/`: rutas públicas y rutas API
+- `components/`: secciones, cards y piezas reutilizables de la landing
+- `lib/`: validaciones, utilidades y helpers compartidos
+- `sanity/`: cliente, queries y schemas del CMS
+- `supabase/`: migraciones SQL de la base de datos de solicitudes
 
 ## Base de datos local / estructura SQL
 

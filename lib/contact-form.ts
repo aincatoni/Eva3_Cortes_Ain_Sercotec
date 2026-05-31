@@ -5,7 +5,14 @@ export type ContactFormValues = {
   message: string
 }
 
+export type ContactFormSubmission = ContactFormValues & {
+  website?: string
+  startedAt?: number
+}
+
 export type ContactFormErrors = Partial<Record<keyof ContactFormValues, string>>
+
+export const MIN_FORM_COMPLETION_MS = 2500
 
 export const initialContactFormValues: ContactFormValues = {
   name: '',
@@ -50,4 +57,18 @@ export function validateContactForm(values: ContactFormValues): ContactFormError
   }
 
   return errors
+}
+
+export function isLikelyBotSubmission(payload: ContactFormSubmission, now = Date.now()) {
+  const website = payload.website?.trim()
+
+  if (website) {
+    return true
+  }
+
+  if (typeof payload.startedAt !== 'number') {
+    return true
+  }
+
+  return now - payload.startedAt < MIN_FORM_COMPLETION_MS
 }

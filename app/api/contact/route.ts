@@ -1,4 +1,4 @@
-import {normalizeContactFormValues, validateContactForm} from '@/lib/contact-form'
+import {isLikelyBotSubmission, normalizeContactFormValues, validateContactForm} from '@/lib/contact-form'
 import {getSupabaseServerClient} from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
@@ -8,6 +8,8 @@ type ContactPayload = {
   email?: unknown
   service?: unknown
   message?: unknown
+  website?: unknown
+  startedAt?: unknown
 }
 
 export async function POST(request: Request) {
@@ -20,6 +22,21 @@ export async function POST(request: Request) {
       service: typeof payload.service === 'string' ? payload.service : '',
       message: typeof payload.message === 'string' ? payload.message : '',
     })
+
+    if (
+      isLikelyBotSubmission({
+        ...values,
+        website: typeof payload.website === 'string' ? payload.website : '',
+        startedAt: typeof payload.startedAt === 'number' ? payload.startedAt : undefined,
+      })
+    ) {
+      return Response.json(
+        {
+          message: 'No pudimos validar el envio. Intenta nuevamente.',
+        },
+        {status: 400}
+      )
+    }
 
     const errors = validateContactForm(values)
 

@@ -1,5 +1,7 @@
 import {type HomeData} from '@/sanity/lib/queries'
 
+import {TestimonialCarousel} from '@/components/TestimonialCarousel'
+
 type TestimonialsSectionProps = {
   testimonials: HomeData['testimonials']
 }
@@ -15,27 +17,7 @@ export function TestimonialsSection({testimonials}: TestimonialsSectionProps) {
         </p>
       </div>
 
-      <div className='grid gap-4'>
-        {testimonials.map((testimonial) => (
-          <article key={testimonial._id} className='rounded-[1.5rem] border border-slate-200 bg-[#f8fafc] p-6'>
-            <p className='text-base leading-8 text-slate-700'>&ldquo;{testimonial.quote}&rdquo;</p>
-            <div className='mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4'>
-              <div>
-                <p className='font-semibold text-slate-950'>{testimonial.name}</p>
-                <p className='text-sm text-slate-600'>
-                  {testimonial.business}
-                  {testimonial.commune ? ` · ${testimonial.commune}` : ''}
-                </p>
-              </div>
-              {testimonial.sourceLabel ? (
-                <span className='rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white'>
-                  {testimonial.sourceLabel}
-                </span>
-              ) : null}
-            </div>
-          </article>
-        ))}
-      </div>
+      <TestimonialCarousel testimonials={testimonials} />
     </section>
   )
 }

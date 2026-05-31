@@ -8,6 +8,7 @@ type ContactFormSectionProps = {
   formErrors: ContactFormErrors
   formMessage: string | null
   isSubmitting: boolean
+  startedAt: number
   onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>
   onFieldChange: (field: keyof ContactFormValues, value: string) => void
   onFieldBlur: (field: keyof ContactFormValues) => void
@@ -19,6 +20,7 @@ export function ContactFormSection({
   formErrors,
   formMessage,
   isSubmitting,
+  startedAt,
   onSubmit,
   onFieldChange,
   onFieldBlur,
@@ -33,6 +35,12 @@ export function ContactFormSection({
         </p>
 
         <form className='mt-8 grid gap-5' onSubmit={onSubmit}>
+          <input type='hidden' name='startedAt' value={startedAt} />
+          <label className='hidden' aria-hidden='true'>
+            Sitio web
+            <input type='text' name='website' tabIndex={-1} autoComplete='off' />
+          </label>
+
           <label className='grid min-w-0 gap-2 text-sm font-medium text-slate-900'>
             Nombre
             <input

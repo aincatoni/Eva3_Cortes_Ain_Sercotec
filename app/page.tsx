@@ -164,7 +164,7 @@ export default function Home() {
               priority
             />
             <div className="min-w-0">
-              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-cyan-800">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#2469b4]">
                 {hero?.eyebrow || 'Region Metropolitana'}
               </p>
               <p className="mt-1 truncate text-sm font-semibold text-slate-900 sm:text-[0.95rem]">
@@ -174,25 +174,25 @@ export default function Home() {
           </div>
 
           <nav aria-label={siteSettings?.navigationLabel || 'Menu principal'} className="hidden items-center gap-6 lg:flex">
-            <a className="text-sm font-medium text-slate-700 transition hover:text-slate-950" href="#nosotros">
+            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#nosotros">
               Nosotros
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-slate-950" href="#servicios">
+            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#servicios">
               Servicios
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-slate-950" href="#testimonios">
+            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#testimonios">
               Testimonios
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-slate-950" href="#faq">
+            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#faq">
               FAQ
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-slate-950" href="#contacto">
+            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#contacto">
               Contacto
             </a>
           </nav>
 
           <a
-            className="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-700"
+            className="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]"
             href={siteSettings?.navCtaTarget || '#contacto'}
           >
             {siteSettings?.navCtaLabel || 'Solicitar orientacion'}
@@ -224,7 +224,7 @@ export default function Home() {
             <section className="grid gap-8 overflow-hidden rounded-[2.25rem] border border-slate-200 bg-white shadow-[0_40px_120px_rgba(15,23,42,0.08)] lg:grid-cols-[1.1fr_0.9fr]">
               <div className="flex flex-col justify-between p-8 sm:p-10 lg:p-12">
                 <div className="space-y-6">
-                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-800">
+                  <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#2469b4]">
                     {hero?.eyebrow}
                   </p>
                   <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance text-slate-950 sm:text-5xl lg:text-6xl">
@@ -235,7 +235,7 @@ export default function Home() {
 
                 <div className="mt-8 flex flex-wrap gap-4">
                   <a
-                    className="rounded-full bg-slate-950 px-6 py-3 font-medium text-white transition hover:bg-cyan-700"
+                    className="rounded-full bg-[#2469b4] px-6 py-3 font-medium text-white transition hover:bg-[#1f5b9c]"
                     href={hero?.primaryCtaTarget}
                   >
                     {hero?.primaryCtaLabel}
@@ -270,7 +270,7 @@ export default function Home() {
                 ) : null}
                 <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.08),rgba(15,23,42,0.42))]" />
                 <div className="absolute bottom-6 left-6 right-6 rounded-[1.5rem] border border-white/30 bg-white/85 p-5 backdrop-blur">
-                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-900">
+                  <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
                     Cobertura territorial
                   </p>
                   <p className="mt-2 text-base font-semibold text-slate-950">Santiago y Providencia</p>
@@ -296,7 +296,7 @@ export default function Home() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">Nosotros</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8fc0f1]">Nosotros</p>
                 <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{aboutSection?.title}</h2>
                 <p className="mt-5 text-base leading-8 text-slate-200">{aboutSection?.intro}</p>
                 <p className="mt-5 text-sm leading-7 text-slate-300">{aboutSection?.paragraphOne}</p>
@@ -315,7 +315,7 @@ export default function Home() {
 
             <section id="servicios" className="space-y-6">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-800">Servicios</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Servicios</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Apoyo concreto para cada etapa del negocio
                 </h2>
@@ -333,7 +333,7 @@ export default function Home() {
 
             <section id="testimonios" className="grid gap-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_26px_90px_rgba(15,23,42,0.08)] lg:grid-cols-[0.42fr_0.58fr] lg:p-10">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-800">Testimonios</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Testimonios</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Historias que refuerzan la propuesta de valor
                 </h2>
@@ -370,11 +370,11 @@ export default function Home() {
 
             <section id="faq" className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr] lg:items-stretch">
               <div className="rounded-[2rem] bg-[linear-gradient(135deg,_rgba(8,47,73,1),_rgba(22,78,99,0.94))] p-8 text-white shadow-[0_28px_100px_rgba(12,74,110,0.28)] lg:flex lg:h-full lg:flex-col lg:justify-center">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-100">Preguntas frecuentes</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#d7eaff]">Preguntas frecuentes</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
                   Respuestas claras para acelerar el primer contacto
                 </h2>
-                <p className="mt-4 text-base leading-8 text-cyan-50/85">
+                <p className="mt-4 text-base leading-8 text-[#e6f2ff]/85">
                   El bloque mantiene una estructura accesible usando elementos nativos para apertura y cierre de cada respuesta.
                 </p>
               </div>
@@ -388,7 +388,7 @@ export default function Home() {
                     <summary className="cursor-pointer list-none text-base font-semibold text-slate-950 marker:hidden">
                       <span className="flex items-center justify-between gap-4">
                         <span>{faq.question}</span>
-                        <span className="text-cyan-800 transition group-open:rotate-45">+</span>
+                        <span className="text-[#2469b4] transition group-open:rotate-45">+</span>
                       </span>
                     </summary>
                     <p className="mt-4 text-sm leading-7 text-slate-600">{faq.answer}</p>
@@ -399,7 +399,7 @@ export default function Home() {
 
             <section className="space-y-6">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-800">Puntos de atencion</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Puntos de atencion</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Presencia territorial para una orientacion mas cercana
                 </h2>
@@ -408,7 +408,7 @@ export default function Home() {
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {locationPoints.map((point) => (
                   <article key={point._id} className="rounded-[1.5rem] border border-slate-200 bg-white p-6">
-                    <span className="rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-900">
+                    <span className="rounded-full bg-[#eef5fd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#2469b4]">
                       {getLocationTypeLabel(point.type)}
                     </span>
                     <h3 className="mt-4 text-lg font-semibold text-slate-950">{point.name}</h3>
@@ -425,7 +425,7 @@ export default function Home() {
 
             <section id="contacto" className="scroll-mt-28 grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
               <div className="rounded-[2rem] bg-slate-950 p-8 text-white shadow-[0_34px_110px_rgba(15,23,42,0.24)]">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">Contacto</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8fc0f1]">Contacto</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight">
                   {contactInfo?.mainOfficeName}
                 </h2>
@@ -449,7 +449,7 @@ export default function Home() {
                   ))}
                 </div>
                 <a
-                  className="mt-8 inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-100"
+                  className="mt-8 inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#2469b4] hover:text-white"
                   href={contactInfo?.mapUrl}
                   target="_blank"
                   rel="noreferrer"
@@ -462,7 +462,7 @@ export default function Home() {
                 id="contacto-formulario"
                 className="min-w-0 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"
               >
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-800">Solicitud inicial</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Solicitud inicial</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                   Deja preparada tu orientacion
                 </h2>
@@ -474,7 +474,7 @@ export default function Home() {
                   <label className="grid min-w-0 gap-2 text-sm font-medium text-slate-900">
                     Nombre
                     <input
-                      className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-cyan-700 ${
+                      className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
                         formErrors.name ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
                       }`}
                       name="name"
@@ -500,7 +500,7 @@ export default function Home() {
                     <label className="grid min-w-0 auto-rows-min gap-2 text-sm font-medium text-slate-900">
                       Correo
                       <input
-                        className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-cyan-700 ${
+                        className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
                           formErrors.email ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
                         }`}
                         type="email"
@@ -526,7 +526,7 @@ export default function Home() {
                     <label className="grid min-w-0 auto-rows-min gap-2 text-sm font-medium text-slate-900">
                       Servicio de interes
                       <select
-                        className={`w-full min-w-0 rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-cyan-700 ${
+                        className={`w-full min-w-0 rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
                           formErrors.service ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
                         }`}
                         name="service"
@@ -558,7 +558,7 @@ export default function Home() {
                   <label className="grid min-w-0 gap-2 text-sm font-medium text-slate-900">
                     Mensaje
                     <textarea
-                      className={`min-h-32 w-full min-w-0 rounded-[1.5rem] border px-4 py-3 text-sm outline-none transition focus:border-cyan-700 ${
+                      className={`min-h-32 w-full min-w-0 rounded-[1.5rem] border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
                         formErrors.message ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
                       }`}
                       name="message"
@@ -582,14 +582,14 @@ export default function Home() {
 
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
-                      className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4] disabled:cursor-not-allowed disabled:opacity-60"
                       type="submit"
                       disabled={isSubmitting}
                     >
                       {isSubmitting ? 'Enviando...' : 'Preparar solicitud'}
                     </button>
                     {formValues.service ? (
-                      <span className="rounded-full bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-950">
+                      <span className="rounded-full bg-[#eef5fd] px-4 py-2 text-sm font-medium text-[#2469b4]">
                         Servicio seleccionado: {formValues.service}
                       </span>
                     ) : null}

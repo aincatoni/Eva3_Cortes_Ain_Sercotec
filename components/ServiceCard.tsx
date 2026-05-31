@@ -24,7 +24,7 @@ export function ServiceCard({service, onSelect}: ServiceCardProps) {
         </div>
       ) : (
         <div className="flex aspect-[4/3] items-end bg-[linear-gradient(135deg,_rgba(12,74,110,0.95),_rgba(15,118,110,0.8))] p-6 text-white">
-          <span className="max-w-[14rem] text-sm font-medium uppercase tracking-[0.22em] text-cyan-100">
+          <span className="max-w-[14rem] text-sm font-medium uppercase tracking-[0.22em] text-[#d7eaff]">
             Servicio prioritario
           </span>
         </div>
@@ -36,7 +36,7 @@ export function ServiceCard({service, onSelect}: ServiceCardProps) {
         <button
           type="button"
           onClick={() => onSelect(service.contactValue)}
-          className="mt-6 inline-flex w-fit items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-cyan-700"
+          className="mt-6 inline-flex w-fit items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]"
         >
           Contactanos
         </button>

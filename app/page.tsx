@@ -1,153 +1,173 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import {useEffect, useState} from 'react'
+import Image from "next/image";
+import { useEffect, useState } from "react";
 
-import {ServiceCard} from '@/components/ServiceCard'
+import { ServiceCard } from "@/components/ServiceCard";
 import {
   type ContactFormErrors,
   type ContactFormValues,
   initialContactFormValues,
   validateContactForm,
-} from '@/lib/contact-form'
-import {type HomeData} from '@/sanity/lib/queries'
+} from "@/lib/contact-form";
+import { type HomeData } from "@/sanity/lib/queries";
 
 type HomeApiResponse = {
-  source: string
-  endpoint: string
-  fetchedAt: string
-  data: HomeData
-  message?: string
-  error?: string
-}
+  source: string;
+  endpoint: string;
+  fetchedAt: string;
+  data: HomeData;
+  message?: string;
+  error?: string;
+};
 
 export default function Home() {
-  const [payload, setPayload] = useState<HomeApiResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formMessage, setFormMessage] = useState<string | null>(null)
-  const [formValues, setFormValues] = useState<ContactFormValues>(initialContactFormValues)
-  const [formErrors, setFormErrors] = useState<ContactFormErrors>({})
+  const [payload, setPayload] = useState<HomeApiResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formMessage, setFormMessage] = useState<string | null>(null);
+  const [formValues, setFormValues] = useState<ContactFormValues>(
+    initialContactFormValues,
+  );
+  const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
 
     async function loadHome() {
       try {
-        setLoading(true)
-        setError(null)
+        setLoading(true);
+        setError(null);
 
-        const response = await fetch('/api/home')
-        const json = (await response.json()) as HomeApiResponse
+        const response = await fetch("/api/home");
+        const json = (await response.json()) as HomeApiResponse;
 
         if (!response.ok) {
-          throw new Error(json.error || json.message || 'No se pudo cargar la home.')
+          throw new Error(
+            json.error || json.message || "No se pudo cargar la home.",
+          );
         }
 
         if (!cancelled) {
-          setPayload(json)
+          setPayload(json);
         }
       } catch (fetchError) {
         if (!cancelled) {
-          setError(fetchError instanceof Error ? fetchError.message : 'Error desconocido')
+          setError(
+            fetchError instanceof Error
+              ? fetchError.message
+              : "Error desconocido",
+          );
         }
       } finally {
         if (!cancelled) {
-          setLoading(false)
+          setLoading(false);
         }
       }
     }
 
-    loadHome()
+    loadHome();
 
     return () => {
-      cancelled = true
-    }
-  }, [])
+      cancelled = true;
+    };
+  }, []);
 
-  const hero = payload?.data.hero
-  const siteSettings = payload?.data.siteSettings
-  const aboutSection = payload?.data.aboutSection
-  const services = payload?.data.services ?? []
-  const testimonials = payload?.data.testimonials ?? []
-  const faqs = payload?.data.faqs ?? []
-  const contactInfo = payload?.data.contactInfo
-  const locationPoints = payload?.data.locationPoints ?? []
+  const hero = payload?.data.hero;
+  const siteSettings = payload?.data.siteSettings;
+  const aboutSection = payload?.data.aboutSection;
+  const services = payload?.data.services ?? [];
+  const testimonials = payload?.data.testimonials ?? [];
+  const faqs = payload?.data.faqs ?? [];
+  const contactInfo = payload?.data.contactInfo;
+  const locationPoints = payload?.data.locationPoints ?? [];
 
   function handleServiceSelect(value: string) {
-    setFormMessage(null)
-    setFormValues((current) => ({...current, service: value}))
-    setFormErrors((current) => ({...current, service: undefined}))
-    document.getElementById('contacto-formulario')?.scrollIntoView({behavior: 'smooth', block: 'start'})
+    setFormMessage(null);
+    setFormValues((current) => ({ ...current, service: value }));
+    setFormErrors((current) => ({ ...current, service: undefined }));
+    document
+      .getElementById("contacto-formulario")
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function handleFieldChange(field: keyof ContactFormValues, value: string) {
-    setFormValues((current) => ({...current, [field]: value}))
-    setFormErrors((current) => ({...current, [field]: undefined}))
-    setFormMessage(null)
+    setFormValues((current) => ({ ...current, [field]: value }));
+    setFormErrors((current) => ({ ...current, [field]: undefined }));
+    setFormMessage(null);
   }
 
   function handleFieldBlur(field: keyof ContactFormValues) {
-    const nextErrors = validateContactForm(formValues)
+    const nextErrors = validateContactForm(formValues);
 
     setFormErrors((current) => ({
       ...current,
       [field]: nextErrors[field],
-    }))
+    }));
   }
 
   async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    const nextErrors = validateContactForm(formValues)
+    const nextErrors = validateContactForm(formValues);
 
     if (Object.keys(nextErrors).length > 0) {
-      setFormErrors(nextErrors)
-      setFormMessage('Corrige los campos marcados antes de continuar.')
-      return
+      setFormErrors(nextErrors);
+      setFormMessage("Corrige los campos marcados antes de continuar.");
+      return;
     }
 
     try {
-      setIsSubmitting(true)
-      setFormMessage(null)
+      setIsSubmitting(true);
+      setFormMessage(null);
 
-      const response = await fetch('/api/contact', {
-        method: 'POST',
+      const response = await fetch("/api/contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formValues),
-      })
+      });
 
       const json = (await response.json()) as {
-        message?: string
-        errors?: ContactFormErrors
-      }
+        message?: string;
+        errors?: ContactFormErrors;
+      };
 
       if (!response.ok) {
         if (json.errors) {
-          setFormErrors(json.errors)
+          setFormErrors(json.errors);
         }
 
-        setFormMessage(json.message || 'No pudimos enviar tu solicitud. Intenta nuevamente.')
-        return
+        setFormMessage(
+          json.message || "No pudimos enviar tu solicitud. Intenta nuevamente.",
+        );
+        return;
       }
 
-      setFormValues(initialContactFormValues)
-      setFormErrors({})
-      setFormMessage(json.message || 'Solicitud enviada correctamente.')
+      setFormValues(initialContactFormValues);
+      setFormErrors({});
+      setFormMessage(json.message || "Solicitud enviada correctamente.");
     } catch {
-      setFormMessage('No pudimos enviar tu solicitud. Intenta nuevamente.')
+      setFormMessage("No pudimos enviar tu solicitud. Intenta nuevamente.");
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
   }
 
   function getLocationTypeLabel(value: string) {
-    if (value === 'main-office') return 'Centro principal'
-    if (value === 'satellite-office') return 'Centro satelite'
-    return 'Punto movil'
+    if (value === "main-office") return "Centro principal";
+    if (value === "satellite-office") return "Centro satelite";
+    return "Punto movil";
+  }
+
+  function getMapEmbedUrl(address: string | undefined) {
+    if (!address) {
+      return "https://www.google.com/maps?output=embed";
+    }
+
+    return `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
   }
 
   return (
@@ -165,55 +185,78 @@ export default function Home() {
             />
             <div className="min-w-0">
               <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[#2469b4]">
-                {hero?.eyebrow || 'Region Metropolitana'}
+                {hero?.eyebrow || "Region Metropolitana"}
               </p>
               <p className="mt-1 truncate text-sm font-semibold text-slate-900 sm:text-[0.95rem]">
-                {siteSettings?.siteTitle || 'Centro de Desarrollo de Negocios Sercotec Santiago'}
+                {siteSettings?.siteTitle ||
+                  "Centro de Desarrollo de Negocios Sercotec Santiago"}
               </p>
             </div>
           </div>
 
-          <nav aria-label={siteSettings?.navigationLabel || 'Menu principal'} className="hidden items-center gap-6 lg:flex">
-            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#nosotros">
+          <nav
+            aria-label={siteSettings?.navigationLabel || "Menu principal"}
+            className="hidden items-center gap-6 lg:flex"
+          >
+            <a
+              className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]"
+              href="#nosotros"
+            >
               Nosotros
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#servicios">
+            <a
+              className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]"
+              href="#servicios"
+            >
               Servicios
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#testimonios">
+            <a
+              className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]"
+              href="#testimonios"
+            >
               Testimonios
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#faq">
+            <a
+              className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]"
+              href="#faq"
+            >
               FAQ
             </a>
-            <a className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]" href="#contacto">
+            <a
+              className="text-sm font-medium text-slate-700 transition hover:text-[#2469b4]"
+              href="#contacto"
+            >
               Contacto
             </a>
           </nav>
 
           <a
             className="inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]"
-            href={siteSettings?.navCtaTarget || '#contacto'}
+            href={siteSettings?.navCtaTarget || "#contacto"}
           >
-            {siteSettings?.navCtaLabel || 'Solicitar orientacion'}
+            {siteSettings?.navCtaLabel || "Solicitar orientacion"}
           </a>
         </div>
       </header>
 
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-6 py-10 sm:px-10 lg:px-12 lg:py-14">
-
         {loading ? (
           <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
-            <p className="text-lg font-medium text-slate-900">Cargando contenido desde el endpoint...</p>
+            <p className="text-lg font-medium text-slate-900">
+              Cargando contenido desde el endpoint...
+            </p>
           </div>
         ) : null}
 
         {error ? (
           <div className="rounded-[2rem] border border-rose-300 bg-rose-50 p-8 text-rose-950">
-            <h1 className="text-2xl font-semibold">No pudimos cargar la home</h1>
+            <h1 className="text-2xl font-semibold">
+              No pudimos cargar la home
+            </h1>
             <p className="mt-3 text-sm text-rose-800">{error}</p>
             <p className="mt-6 text-sm text-rose-800">
-              Revisa que exista contenido publicado en Sanity y prueba el endpoint en
+              Revisa que exista contenido publicado en Sanity y prueba el
+              endpoint en
               <span className="mx-1 font-semibold">/api/home</span>.
             </p>
           </div>
@@ -230,7 +273,9 @@ export default function Home() {
                   <h1 className="max-w-3xl text-4xl font-semibold tracking-tight text-balance text-slate-950 sm:text-5xl lg:text-6xl">
                     {hero?.title}
                   </h1>
-                  <p className="max-w-2xl text-lg leading-8 text-slate-600">{hero?.subtitle}</p>
+                  <p className="max-w-2xl text-lg leading-8 text-slate-600">
+                    {hero?.subtitle}
+                  </p>
                 </div>
 
                 <div className="mt-8 flex flex-wrap gap-4">
@@ -251,9 +296,15 @@ export default function Home() {
                 </div>
 
                 <div className="mt-10 flex flex-wrap gap-3 border-t border-slate-200 pt-6 text-sm font-medium text-slate-600">
-                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Asesoria sin costo</span>
-                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Cobertura Santiago y Providencia</span>
-                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Acompanamiento especializado</span>
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">
+                    Asesoria sin costo
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">
+                    Cobertura Santiago y Providencia
+                  </span>
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">
+                    Acompanamiento especializado
+                  </span>
                 </div>
               </div>
 
@@ -273,15 +324,22 @@ export default function Home() {
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
                     Cobertura territorial
                   </p>
-                  <p className="mt-2 text-base font-semibold text-slate-950">Santiago y Providencia</p>
+                  <p className="mt-2 text-base font-semibold text-slate-950">
+                    Santiago y Providencia
+                  </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    Acompanamiento cercano para micro y pequenas empresas, cooperativas y emprendimientos con foco en resultados reales.
+                    Acompanamiento cercano para micro y pequenas empresas,
+                    cooperativas y emprendimientos con foco en resultados
+                    reales.
                   </p>
                 </div>
               </div>
             </section>
 
-            <section id="nosotros" className="grid gap-8 rounded-[2rem] bg-[#0f172a] p-8 text-white shadow-[0_32px_110px_rgba(15,23,42,0.28)] lg:grid-cols-[0.95fr_1.05fr] lg:p-10">
+            <section
+              id="nosotros"
+              className="grid gap-8 rounded-[2rem] bg-[#0f172a] p-8 text-white shadow-[0_32px_110px_rgba(15,23,42,0.28)] lg:grid-cols-[0.95fr_1.05fr] lg:p-10"
+            >
               <div className="relative overflow-hidden rounded-[1.5rem] bg-slate-800">
                 {aboutSection?.image?.asset?.url ? (
                   <Image
@@ -296,17 +354,34 @@ export default function Home() {
               </div>
 
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8fc0f1]">Nosotros</p>
-                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{aboutSection?.title}</h2>
-                <p className="mt-5 text-base leading-8 text-slate-200">{aboutSection?.intro}</p>
-                <p className="mt-5 text-sm leading-7 text-slate-300">{aboutSection?.paragraphOne}</p>
-                <p className="mt-4 text-sm leading-7 text-slate-300">{aboutSection?.paragraphTwo}</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8fc0f1]">
+                  Nosotros
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                  {aboutSection?.title}
+                </h2>
+                <p className="mt-5 text-base leading-8 text-slate-200">
+                  {aboutSection?.intro}
+                </p>
+                <p className="mt-5 text-sm leading-7 text-slate-300">
+                  {aboutSection?.paragraphOne}
+                </p>
+                <p className="mt-4 text-sm leading-7 text-slate-300">
+                  {aboutSection?.paragraphTwo}
+                </p>
 
                 <div className="mt-8 grid gap-4 sm:grid-cols-2">
                   {aboutSection?.stats.map((stat) => (
-                    <article key={stat._key} className="rounded-[1.25rem] border border-white/10 bg-white/6 p-5">
-                      <p className="text-2xl font-semibold text-white">{stat.value}</p>
-                      <p className="mt-2 text-sm leading-6 text-slate-300">{stat.label}</p>
+                    <article
+                      key={stat._key}
+                      className="rounded-[1.25rem] border border-white/10 bg-white/6 p-5"
+                    >
+                      <p className="text-2xl font-semibold text-white">
+                        {stat.value}
+                      </p>
+                      <p className="mt-2 text-sm leading-6 text-slate-300">
+                        {stat.label}
+                      </p>
                     </article>
                   ))}
                 </div>
@@ -315,30 +390,44 @@ export default function Home() {
 
             <section id="servicios" className="space-y-6">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Servicios</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
+                  Servicios
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Apoyo concreto para cada etapa del negocio
                 </h2>
                 <p className="mt-4 text-base leading-8 text-slate-600">
-                  Cada tarjeta lleva al bloque de contacto con el interes de servicio ya preparado para la siguiente fase del formulario.
+                  Cada tarjeta lleva al bloque de contacto con el interes de
+                  servicio ya preparado para la siguiente fase del formulario.
                 </p>
               </div>
 
               <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                 {services.map((service) => (
-                  <ServiceCard key={service._id} service={service} onSelect={handleServiceSelect} />
+                  <ServiceCard
+                    key={service._id}
+                    service={service}
+                    onSelect={handleServiceSelect}
+                  />
                 ))}
               </div>
             </section>
 
-            <section id="testimonios" className="grid gap-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_26px_90px_rgba(15,23,42,0.08)] lg:grid-cols-[0.42fr_0.58fr] lg:p-10">
+            <section
+              id="testimonios"
+              className="grid gap-6 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_26px_90px_rgba(15,23,42,0.08)] lg:grid-cols-[0.42fr_0.58fr] lg:p-10"
+            >
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Testimonios</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
+                  Testimonios
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Historias que refuerzan la propuesta de valor
                 </h2>
                 <p className="mt-4 text-base leading-8 text-slate-600">
-                  Esta primera iteracion muestra testimonios adaptados para prototipo mientras se consolida el contenido editorial definitivo en el CMS.
+                  Esta primera iteracion muestra testimonios adaptados para
+                  prototipo mientras se consolida el contenido editorial
+                  definitivo en el CMS.
                 </p>
               </div>
 
@@ -348,13 +437,19 @@ export default function Home() {
                     key={testimonial._id}
                     className="rounded-[1.5rem] border border-slate-200 bg-[#f8fafc] p-6"
                   >
-                    <p className="text-base leading-8 text-slate-700">&ldquo;{testimonial.quote}&rdquo;</p>
+                    <p className="text-base leading-8 text-slate-700">
+                      &ldquo;{testimonial.quote}&rdquo;
+                    </p>
                     <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4">
                       <div>
-                        <p className="font-semibold text-slate-950">{testimonial.name}</p>
+                        <p className="font-semibold text-slate-950">
+                          {testimonial.name}
+                        </p>
                         <p className="text-sm text-slate-600">
                           {testimonial.business}
-                          {testimonial.commune ? ` · ${testimonial.commune}` : ''}
+                          {testimonial.commune
+                            ? ` · ${testimonial.commune}`
+                            : ""}
                         </p>
                       </div>
                       {testimonial.sourceLabel ? (
@@ -368,14 +463,20 @@ export default function Home() {
               </div>
             </section>
 
-            <section id="faq" className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr] lg:items-stretch">
+            <section
+              id="faq"
+              className="grid gap-6 lg:grid-cols-[0.48fr_0.52fr] lg:items-stretch"
+            >
               <div className="rounded-[2rem] bg-[linear-gradient(135deg,_rgba(8,47,73,1),_rgba(22,78,99,0.94))] p-8 text-white shadow-[0_28px_100px_rgba(12,74,110,0.28)] lg:flex lg:h-full lg:flex-col lg:justify-center">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#d7eaff]">Preguntas frecuentes</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#d7eaff]">
+                  Preguntas frecuentes
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
                   Respuestas claras para acelerar el primer contacto
                 </h2>
                 <p className="mt-4 text-base leading-8 text-[#e6f2ff]/85">
-                  El bloque mantiene una estructura accesible usando elementos nativos para apertura y cierre de cada respuesta.
+                  El bloque mantiene una estructura accesible usando elementos
+                  nativos para apertura y cierre de cada respuesta.
                 </p>
               </div>
 
@@ -388,10 +489,14 @@ export default function Home() {
                     <summary className="cursor-pointer list-none text-base font-semibold text-slate-950 marker:hidden">
                       <span className="flex items-center justify-between gap-4">
                         <span>{faq.question}</span>
-                        <span className="text-[#2469b4] transition group-open:rotate-45">+</span>
+                        <span className="text-[#2469b4] transition group-open:rotate-45">
+                          +
+                        </span>
                       </span>
                     </summary>
-                    <p className="mt-4 text-sm leading-7 text-slate-600">{faq.answer}</p>
+                    <p className="mt-4 text-sm leading-7 text-slate-600">
+                      {faq.answer}
+                    </p>
                   </details>
                 ))}
               </div>
@@ -399,7 +504,9 @@ export default function Home() {
 
             <section className="space-y-6">
               <div className="max-w-3xl">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Puntos de atencion</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
+                  Puntos de atencion
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl">
                   Presencia territorial para una orientacion mas cercana
                 </h2>
@@ -407,67 +514,49 @@ export default function Home() {
 
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {locationPoints.map((point) => (
-                  <article key={point._id} className="rounded-[1.5rem] border border-slate-200 bg-white p-6">
+                  <article
+                    key={point._id}
+                    className="rounded-[1.5rem] border border-slate-200 bg-white p-6"
+                  >
                     <span className="rounded-full bg-[#eef5fd] px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-[#2469b4]">
                       {getLocationTypeLabel(point.type)}
                     </span>
-                    <h3 className="mt-4 text-lg font-semibold text-slate-950">{point.name}</h3>
-                    <p className="mt-3 text-sm leading-7 text-slate-600">{point.address}</p>
-                    <p className="mt-3 text-sm leading-7 text-slate-600">{point.schedule}</p>
-                    <p className="mt-4 text-sm font-medium text-slate-900">Comuna: {point.commune}</p>
+                    <h3 className="mt-4 text-lg font-semibold text-slate-950">
+                      {point.name}
+                    </h3>
+                    <p className="mt-3 text-sm leading-7 text-slate-600">
+                      {point.address}
+                    </p>
+                    <p className="mt-3 text-sm leading-7 text-slate-600">
+                      {point.schedule}
+                    </p>
+                    <p className="mt-4 text-sm font-medium text-slate-900">
+                      Comuna: {point.commune}
+                    </p>
                     {point.contactPerson ? (
-                      <p className="mt-2 text-sm text-slate-600">Responsable: {point.contactPerson}</p>
+                      <p className="mt-2 text-sm text-slate-600">
+                        Responsable: {point.contactPerson}
+                      </p>
                     ) : null}
                   </article>
                 ))}
               </div>
             </section>
 
-            <section id="contacto" className="scroll-mt-28 grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
-              <div className="rounded-[2rem] bg-slate-950 p-8 text-white shadow-[0_34px_110px_rgba(15,23,42,0.24)]">
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#8fc0f1]">Contacto</p>
-                <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-                  {contactInfo?.mainOfficeName}
-                </h2>
-                <div className="mt-6 space-y-4 text-sm leading-7 text-slate-300">
-                  <p>{contactInfo?.address}</p>
-                  <p>{contactInfo?.phone}</p>
-                  <p>{contactInfo?.email}</p>
-                  <p>{contactInfo?.hours}</p>
-                </div>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  {contactInfo?.socialLinks.map((link) => (
-                    <a
-                      key={link._key}
-                      className="rounded-full border border-white/15 px-4 py-2 text-sm font-medium text-white transition hover:bg-white/10"
-                      href={link.url}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </div>
-                <a
-                  className="mt-8 inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-[#2469b4] hover:text-white"
-                  href={contactInfo?.mapUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Ver ubicacion
-                </a>
-              </div>
-
+            <section id="contacto" className="scroll-mt-28">
               <div
                 id="contacto-formulario"
                 className="min-w-0 rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]"
               >
-                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">Solicitud inicial</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
+                  Solicitud inicial
+                </p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
                   Deja preparada tu orientacion
                 </h2>
                 <p className="mt-4 text-sm leading-7 text-slate-600">
-                  Completa tus datos y cuentanos brevemente que apoyo necesitas para que podamos orientarte mejor.
+                  Completa tus datos y cuentanos brevemente que apoyo necesitas
+                  para que podamos orientarte mejor.
                 </p>
 
                 <form className="mt-8 grid gap-5" onSubmit={handleFormSubmit}>
@@ -475,24 +564,30 @@ export default function Home() {
                     Nombre
                     <input
                       className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
-                        formErrors.name ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
+                        formErrors.name
+                          ? "border-rose-500 bg-rose-50/60"
+                          : "border-slate-300"
                       }`}
                       name="name"
                       value={formValues.name}
-                      onChange={(event) => handleFieldChange('name', event.target.value)}
-                      onBlur={() => handleFieldBlur('name')}
+                      onChange={(event) =>
+                        handleFieldChange("name", event.target.value)
+                      }
+                      onBlur={() => handleFieldBlur("name")}
                       placeholder="Tu nombre"
-                      aria-invalid={formErrors.name ? 'true' : 'false'}
-                      aria-describedby={formErrors.name ? 'contact-name-error' : undefined}
+                      aria-invalid={formErrors.name ? "true" : "false"}
+                      aria-describedby={
+                        formErrors.name ? "contact-name-error" : undefined
+                      }
                       required
                     />
                     <span
-                      id={formErrors.name ? 'contact-name-error' : undefined}
+                      id={formErrors.name ? "contact-name-error" : undefined}
                       className={`min-h-5 text-sm font-medium ${
-                        formErrors.name ? 'text-rose-700' : 'text-transparent'
+                        formErrors.name ? "text-rose-700" : "text-transparent"
                       }`}
                     >
-                      {formErrors.name || ' '}
+                      {formErrors.name || " "}
                     </span>
                   </label>
 
@@ -501,25 +596,35 @@ export default function Home() {
                       Correo
                       <input
                         className={`w-full min-w-0 rounded-2xl border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
-                          formErrors.email ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
+                          formErrors.email
+                            ? "border-rose-500 bg-rose-50/60"
+                            : "border-slate-300"
                         }`}
                         type="email"
                         name="email"
                         value={formValues.email}
-                        onChange={(event) => handleFieldChange('email', event.target.value)}
-                        onBlur={() => handleFieldBlur('email')}
+                        onChange={(event) =>
+                          handleFieldChange("email", event.target.value)
+                        }
+                        onBlur={() => handleFieldBlur("email")}
                         placeholder="nombre@correo.cl"
-                        aria-invalid={formErrors.email ? 'true' : 'false'}
-                        aria-describedby={formErrors.email ? 'contact-email-error' : undefined}
+                        aria-invalid={formErrors.email ? "true" : "false"}
+                        aria-describedby={
+                          formErrors.email ? "contact-email-error" : undefined
+                        }
                         required
                       />
                       <span
-                        id={formErrors.email ? 'contact-email-error' : undefined}
+                        id={
+                          formErrors.email ? "contact-email-error" : undefined
+                        }
                         className={`min-h-5 text-sm font-medium ${
-                          formErrors.email ? 'text-rose-700' : 'text-transparent'
+                          formErrors.email
+                            ? "text-rose-700"
+                            : "text-transparent"
                         }`}
                       >
-                        {formErrors.email || ' '}
+                        {formErrors.email || " "}
                       </span>
                     </label>
 
@@ -527,30 +632,47 @@ export default function Home() {
                       Servicio de interes
                       <select
                         className={`w-full min-w-0 rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
-                          formErrors.service ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
+                          formErrors.service
+                            ? "border-rose-500 bg-rose-50/60"
+                            : "border-slate-300"
                         }`}
                         name="service"
                         value={formValues.service}
-                        onChange={(event) => handleFieldChange('service', event.target.value)}
-                        onBlur={() => handleFieldBlur('service')}
-                        aria-invalid={formErrors.service ? 'true' : 'false'}
-                        aria-describedby={formErrors.service ? 'contact-service-error' : undefined}
+                        onChange={(event) =>
+                          handleFieldChange("service", event.target.value)
+                        }
+                        onBlur={() => handleFieldBlur("service")}
+                        aria-invalid={formErrors.service ? "true" : "false"}
+                        aria-describedby={
+                          formErrors.service
+                            ? "contact-service-error"
+                            : undefined
+                        }
                         required
                       >
                         <option value="">Selecciona un servicio</option>
                         {services.map((service) => (
-                          <option key={service._id} value={service.contactValue}>
+                          <option
+                            key={service._id}
+                            value={service.contactValue}
+                          >
                             {service.contactValue}
                           </option>
                         ))}
                       </select>
                       <span
-                        id={formErrors.service ? 'contact-service-error' : undefined}
+                        id={
+                          formErrors.service
+                            ? "contact-service-error"
+                            : undefined
+                        }
                         className={`min-h-5 text-sm font-medium ${
-                          formErrors.service ? 'text-rose-700' : 'text-transparent'
+                          formErrors.service
+                            ? "text-rose-700"
+                            : "text-transparent"
                         }`}
                       >
-                        {formErrors.service || ' '}
+                        {formErrors.service || " "}
                       </span>
                     </label>
                   </div>
@@ -559,24 +681,34 @@ export default function Home() {
                     Mensaje
                     <textarea
                       className={`min-h-32 w-full min-w-0 rounded-[1.5rem] border px-4 py-3 text-sm outline-none transition focus:border-[#2469b4] ${
-                        formErrors.message ? 'border-rose-500 bg-rose-50/60' : 'border-slate-300'
+                        formErrors.message
+                          ? "border-rose-500 bg-rose-50/60"
+                          : "border-slate-300"
                       }`}
                       name="message"
                       value={formValues.message}
-                      onChange={(event) => handleFieldChange('message', event.target.value)}
-                      onBlur={() => handleFieldBlur('message')}
+                      onChange={(event) =>
+                        handleFieldChange("message", event.target.value)
+                      }
+                      onBlur={() => handleFieldBlur("message")}
                       placeholder="Cuéntanos brevemente qué necesitas potenciar en tu negocio."
-                      aria-invalid={formErrors.message ? 'true' : 'false'}
-                      aria-describedby={formErrors.message ? 'contact-message-error' : undefined}
+                      aria-invalid={formErrors.message ? "true" : "false"}
+                      aria-describedby={
+                        formErrors.message ? "contact-message-error" : undefined
+                      }
                       required
                     />
                     <span
-                      id={formErrors.message ? 'contact-message-error' : undefined}
+                      id={
+                        formErrors.message ? "contact-message-error" : undefined
+                      }
                       className={`min-h-5 text-sm font-medium ${
-                        formErrors.message ? 'text-rose-700' : 'text-transparent'
+                        formErrors.message
+                          ? "text-rose-700"
+                          : "text-transparent"
                       }`}
                     >
-                      {formErrors.message || ' '}
+                      {formErrors.message || " "}
                     </span>
                   </label>
 
@@ -586,7 +718,7 @@ export default function Home() {
                       type="submit"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Enviando...' : 'Preparar solicitud'}
+                      {isSubmitting ? "Enviando..." : "Preparar solicitud"}
                     </button>
                     {formValues.service ? (
                       <span className="rounded-full bg-[#eef5fd] px-4 py-2 text-sm font-medium text-[#2469b4]">
@@ -598,7 +730,9 @@ export default function Home() {
                   {formMessage ? (
                     <p
                       className={`text-sm leading-7 ${
-                        Object.keys(formErrors).length > 0 ? 'text-rose-700' : 'text-emerald-700'
+                        Object.keys(formErrors).length > 0
+                          ? "text-rose-700"
+                          : "text-emerald-700"
                       }`}
                     >
                       {formMessage}
@@ -608,9 +742,61 @@ export default function Home() {
               </div>
             </section>
 
-            <footer className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 text-sm text-slate-600 shadow-[0_18px_70px_rgba(15,23,42,0.06)] sm:px-8">
-              <p className="font-semibold text-slate-950">{siteSettings?.siteTitle}</p>
-              <p className="mt-2 max-w-3xl leading-7">{siteSettings?.footerNote}</p>
+            <footer className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 shadow-[0_18px_70px_rgba(15,23,42,0.06)] sm:px-8">
+              <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]">
+                    Contacto
+                  </p>
+                  <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+                    {contactInfo?.mainOfficeName}
+                  </h2>
+                  <div className="mt-6 space-y-4 text-sm leading-7 text-slate-600">
+                    <p>{contactInfo?.address}</p>
+                    <p>{contactInfo?.phone}</p>
+                    <p>{contactInfo?.email}</p>
+                    <p>{contactInfo?.hours}</p>
+                  </div>
+                  <div className="mt-6 flex flex-wrap gap-3">
+                    {contactInfo?.socialLinks.map((link) => (
+                      <a
+                        key={link._key}
+                        className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-900 transition hover:border-[#2469b4] hover:text-[#2469b4]"
+                        href={link.url}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                  <a
+                    className="mt-8 inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]"
+                    href={contactInfo?.mapUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Abrir en Google Maps
+                  </a>
+                  <p className="mt-8 text-sm text-slate-600">
+                    {siteSettings?.footerNote}
+                  </p>
+                </div>
+
+                <div className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-100">
+                  <iframe
+                    title='Mapa de ubicacion del Centro de Desarrollo de Negocios Sercotec Santiago'
+                    src={getMapEmbedUrl(contactInfo?.address)}
+                    className='h-[22rem] w-full border-0'
+                    loading='lazy'
+                    referrerPolicy='no-referrer-when-downgrade'
+                  />
+                </div>
+              </div>
+
+              <div className="mt-8 border-t border-slate-200 pt-6 text-center text-sm text-slate-600">
+                <p>Hecho con ❤️ por Ain Cortés Catoni</p>
+              </div>
             </footer>
           </>
         ) : null}

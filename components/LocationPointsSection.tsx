@@ -7,7 +7,7 @@ type LocationPointsSectionProps = {
 
 export function LocationPointsSection({locationPoints}: LocationPointsSectionProps) {
   return (
-    <section className='space-y-6'>
+    <section id='puntos-atencion' className='scroll-mt-28 space-y-6'>
       <div className='max-w-3xl'>
         <p className='text-sm font-semibold uppercase tracking-[0.22em] text-[#2469b4]'>Puntos de atencion</p>
         <h2 className='mt-2 text-3xl font-semibold tracking-tight text-slate-950 sm:text-4xl'>Presencia territorial para una orientacion mas cercana</h2>

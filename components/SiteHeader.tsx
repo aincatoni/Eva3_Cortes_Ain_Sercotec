@@ -40,6 +40,9 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
           <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#testimonios'>
             Testimonios
           </a>
+          <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#puntos-atencion'>
+            Sucursales
+          </a>
           <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#faq'>
             FAQ
           </a>

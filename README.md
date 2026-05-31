@@ -1,11 +1,17 @@
-# Evaluación 3 Desarrollo Frontend
+# Evaluación Unidad 3 Desarrollo Frontend
+
+## Datos del estudiante
+
+- Ain Cortés Catoni
+- Sección 51
+- Docente: Rodrigo Alejandro Matus Pezo
 
 ## Enlaces principales
 
-- Sitio desplegado en Vercel: `https://eva3-cortes-ain-sercotec.vercel.app`
-- Sanity Studio publicado: `https://eva3-cortes-ain-sercotec.vercel.app/studio`
-- Endpoint principal consumido por la home: `https://eva3-cortes-ain-sercotec.vercel.app/api/home`
-- Endpoint de recepción del formulario: `https://eva3-cortes-ain-sercotec.vercel.app/api/contact`
+- Sitio desplegado en Vercel: [https://eva3-cortes-ain-sercotec.vercel.app](https://eva3-cortes-ain-sercotec.vercel.app)
+- Sanity Studio publicado: [https://eva3-cortes-ain-sercotec.vercel.app/studio](https://eva3-cortes-ain-sercotec.vercel.app/studio)
+- Endpoint principal consumido por la home: [https://eva3-cortes-ain-sercotec.vercel.app/api/home](https://eva3-cortes-ain-sercotec.vercel.app/api/home)
+- Endpoint de recepción del formulario: [https://eva3-cortes-ain-sercotec.vercel.app/api/contact](https://eva3-cortes-ain-sercotec.vercel.app/api/contact)
 
 ## Introducción
 
@@ -21,8 +27,11 @@ La solución fue implementada con `Next.js`, `TypeScript`, `Tailwind CSS`, `Sani
 - creación de endpoints propios en `Next.js` para contenido y formulario
 - integración de `Supabase` para persistir solicitudes de contacto en la tabla `contact_requests`
 - validación cliente/servidor del formulario de contacto
+- capa inicial anti-bot con honeypot y control de tiempo mínimo de envío
 - refactor de la landing en componentes reutilizables por sección y por card
 - navegación desktop y mobile por anclas dentro de la misma landing
+- carrusel de testimonios accesible y responsive
+- detalle ampliado de servicios mediante modal dentro de la landing
 - despliegue público del proyecto en `Vercel`
 
 ## Cómo revisar el proyecto
@@ -39,6 +48,7 @@ Desde esa URL se puede revisar:
 - integración con el CMS
 - landing visual funcional
 - landing componentizada en secciones reutilizables
+- carrusel funcional de testimonios
 - flujo real del formulario de contacto
 
 ### 2. Studio CMS
@@ -98,6 +108,13 @@ Campos almacenados actualmente:
 
 Esto deja lista la base para una futura pantalla administrativa de revisión y gestión de solicitudes.
 
+Medidas anti-bot actuales:
+
+- honeypot oculto
+- validación de tiempo mínimo de completado del formulario
+
+Estas medidas no reemplazan un captcha externo, pero agregan una primera capa real de protección para la evaluación.
+
 ## Cómo se resuelve el requisito de consumo de endpoint y persistencia
 
 Para que el consumo de API quede explícito en la evaluación, no se consulta `Sanity` solo de forma directa desde la vista. En cambio, se implementó una capa intermedia con un endpoint propio:
@@ -156,7 +173,9 @@ Componentes principales actuales:
 - `components/AboutSection.tsx`
 - `components/ServicesSection.tsx`
 - `components/ServiceCard.tsx`
+- `components/ServiceDetailModal.tsx`
 - `components/TestimonialsSection.tsx`
+- `components/TestimonialCarousel.tsx`
 - `components/FaqSection.tsx`
 - `components/LocationPointsSection.tsx`
 - `components/LocationPointCard.tsx`
@@ -175,15 +194,18 @@ Estado implementado:
 - endpoint `/api/contact` operativo
 - landing visual funcional conectada a `Sanity`
 - formulario conectado a `Supabase`
+- capa anti-bot inicial implementada
 - landing separada en componentes reutilizables
 - menú mobile implementado
+- carrusel de testimonios implementado
+- modal de detalle en servicios implementado
 - modelado CMS ya definido para las secciones principales
 
 Pendiente de siguiente iteración:
 
 - terminar pulido visual final de la landing
 - completar carga editorial final en `Sanity`
-- agregar protección anti-bot al formulario
+- evaluar si se agregará captcha externo además de la capa anti-bot actual
 - construir panel admin para revisar solicitudes guardadas en `Supabase`
 - reforzar accesibilidad y optimización responsive
 
@@ -240,6 +262,13 @@ Directorios principales usados actualmente:
 - `sanity/`: cliente, queries y schemas del CMS
 - `supabase/`: migraciones SQL de la base de datos de solicitudes
 
+## Documentación adicional
+
+Archivos de apoyo actualmente disponibles:
+
+- `README.md`: visión general del proyecto e instalación
+- `GUIA-BUENAS-PRACTICAS.md`: convenciones, accesibilidad, seguridad y estructura
+
 ## Base de datos local / estructura SQL
 
 La estructura actual para guardar solicitudes se encuentra en:
@@ -258,8 +287,9 @@ La forma más simple de revisar el cumplimiento técnico es esta:
 
 1. abrir el sitio público en `Vercel`
 2. abrir el endpoint `/api/home` y verificar el JSON
-3. enviar una solicitud desde el formulario y verificar que se persiste en `Supabase`
-4. revisar `/studio` si se cuenta con acceso de `Sanity`
+3. revisar el carrusel de testimonios y la navegación mobile
+4. enviar una solicitud desde el formulario y verificar que se persiste en `Supabase`
+5. revisar `/studio` si se cuenta con acceso de `Sanity`
 
 De esa forma se puede comprobar que el proyecto:
 
@@ -267,4 +297,5 @@ De esa forma se puede comprobar que el proyecto:
 - consume datos desde una API
 - utiliza un CMS real
 - guarda solicitudes en una base de datos real
+- incorpora interactividad avanzada en servicios, FAQ, navegación y testimonios
 - separa contenido, backend de integración, persistencia y frontend

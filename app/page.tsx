@@ -154,13 +154,23 @@ export default function Home() {
     <main className="min-h-screen bg-[#f7f8f4] text-slate-950">
       <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-[#f7f8f4]/90 backdrop-blur">
         <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-6 px-6 py-4 sm:px-10 lg:px-12">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.26em] text-cyan-800">
-              {hero?.eyebrow || 'Region Metropolitana'}
-            </p>
-            <p className="mt-1 text-sm font-semibold text-slate-900">
-              {siteSettings?.siteTitle || 'Centro de Desarrollo de Negocios Sercotec Santiago'}
-            </p>
+          <div className="flex min-w-0 items-center gap-4">
+            <Image
+              src="/images/sercotec-centro-logo.png"
+              alt="Centros de Negocios Sercotec"
+              width={196}
+              height={68}
+              className="h-11 w-auto shrink-0 sm:h-12"
+              priority
+            />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold uppercase tracking-[0.26em] text-cyan-800">
+                {hero?.eyebrow || 'Region Metropolitana'}
+              </p>
+              <p className="mt-1 truncate text-sm font-semibold text-slate-900 sm:text-[0.95rem]">
+                {siteSettings?.siteTitle || 'Centro de Desarrollo de Negocios Sercotec Santiago'}
+              </p>
+            </div>
           </div>
 
           <nav aria-label={siteSettings?.navigationLabel || 'Menu principal'} className="hidden items-center gap-6 lg:flex">
@@ -191,13 +201,6 @@ export default function Home() {
       </header>
 
       <section className="mx-auto flex w-full max-w-7xl flex-col gap-12 px-6 py-10 sm:px-10 lg:px-12 lg:py-14">
-        <div className="flex flex-wrap items-center gap-3 text-sm text-slate-600">
-          <span className="rounded-full border border-cyan-800/15 bg-cyan-800/8 px-3 py-1 font-medium text-cyan-900">
-            Consumo de endpoint activo
-          </span>
-          <code className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-700">/api/home</code>
-          {payload?.fetchedAt ? <span>Actualizado: {new Date(payload.fetchedAt).toLocaleString('es-CL')}</span> : null}
-        </div>
 
         {loading ? (
           <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-[0_24px_80px_rgba(15,23,42,0.08)]">
@@ -247,20 +250,11 @@ export default function Home() {
                   ) : null}
                 </div>
 
-                <dl className="mt-10 grid gap-4 border-t border-slate-200 pt-6 text-sm text-slate-600 sm:grid-cols-3">
-                  <div>
-                    <dt className="text-slate-500">Fuente</dt>
-                    <dd className="mt-1 font-semibold text-slate-950">{payload?.source}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-slate-500">Servicios visibles</dt>
-                    <dd className="mt-1 font-semibold text-slate-950">{services.length}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-slate-500">Preguntas frecuentes</dt>
-                    <dd className="mt-1 font-semibold text-slate-950">{faqs.length}</dd>
-                  </div>
-                </dl>
+                <div className="mt-10 flex flex-wrap gap-3 border-t border-slate-200 pt-6 text-sm font-medium text-slate-600">
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Asesoria sin costo</span>
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Cobertura Santiago y Providencia</span>
+                  <span className="rounded-full bg-slate-100 px-4 py-2 text-slate-800">Acompanamiento especializado</span>
+                </div>
               </div>
 
               <div className="relative min-h-[320px] bg-slate-200">
@@ -429,7 +423,7 @@ export default function Home() {
               </div>
             </section>
 
-            <section id="contacto" className="grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
+            <section id="contacto" className="scroll-mt-28 grid gap-6 lg:grid-cols-[0.88fr_1.12fr]">
               <div className="rounded-[2rem] bg-slate-950 p-8 text-white shadow-[0_34px_110px_rgba(15,23,42,0.24)]">
                 <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">Contacto</p>
                 <h2 className="mt-2 text-3xl font-semibold tracking-tight">
@@ -617,9 +611,6 @@ export default function Home() {
             <footer className="rounded-[2rem] border border-slate-200 bg-white px-6 py-8 text-sm text-slate-600 shadow-[0_18px_70px_rgba(15,23,42,0.06)] sm:px-8">
               <p className="font-semibold text-slate-950">{siteSettings?.siteTitle}</p>
               <p className="mt-2 max-w-3xl leading-7">{siteSettings?.footerNote}</p>
-              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-slate-500">
-                Endpoint consumido: {payload?.endpoint}
-              </p>
             </footer>
           </>
         ) : null}

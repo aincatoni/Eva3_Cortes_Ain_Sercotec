@@ -7,7 +7,7 @@ type FaqSectionProps = {
 export function FaqSection({faqs}: FaqSectionProps) {
   return (
     <section id='faq' className='scroll-mt-28 grid gap-6 lg:grid-cols-[0.48fr_0.52fr] lg:items-stretch'>
-      <div className='rounded-[2rem] bg-[linear-gradient(135deg,_rgba(8,47,73,1),_rgba(22,78,99,0.94))] p-8 text-white shadow-[0_28px_100px_rgba(12,74,110,0.28)] lg:flex lg:h-full lg:flex-col lg:justify-center'>
+      <div className='rounded-[2rem] bg-[#091128] p-8 text-white shadow-[0_28px_100px_rgba(12,74,110,0.28)] lg:flex lg:h-full lg:flex-col lg:justify-center'>
         <p className='text-sm font-semibold uppercase tracking-[0.22em] text-[#d7eaff]'>Preguntas frecuentes</p>
         <h2 className='mt-2 text-3xl font-semibold tracking-tight sm:text-4xl'>Respuestas claras para acelerar el primer contacto</h2>
         <p className='mt-4 text-base leading-8 text-[#e6f2ff]/85'>

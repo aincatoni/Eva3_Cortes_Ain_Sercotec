@@ -8,7 +8,7 @@ type AboutSectionProps = {
 
 export function AboutSection({aboutSection}: AboutSectionProps) {
   return (
-    <section id='nosotros' className='scroll-mt-28 grid gap-8 rounded-[2rem] bg-[#0f172a] p-8 text-white shadow-[0_32px_110px_rgba(15,23,42,0.28)] lg:grid-cols-[0.95fr_1.05fr] lg:p-10'>
+    <section id='nosotros' className='scroll-mt-28 grid gap-8 rounded-[2rem] bg-[#091128] p-8 text-white shadow-[0_32px_110px_rgba(15,23,42,0.28)] lg:grid-cols-[0.95fr_1.05fr] lg:p-10'>
       <div className='relative overflow-hidden rounded-[1.5rem] bg-slate-800'>
         {aboutSection.image?.asset?.url ? (
           <Image

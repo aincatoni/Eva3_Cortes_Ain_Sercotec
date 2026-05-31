@@ -38,7 +38,7 @@ export function ServiceCard({service, onSelect, onOpenDetail}: ServiceCardProps)
           <button
             type='button'
             onClick={() => onSelect(service.contactValue)}
-            className='inline-flex w-fit items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]'
+            className='inline-flex w-fit items-center rounded-full bg-[#091128] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]'
           >
             Contactanos
           </button>

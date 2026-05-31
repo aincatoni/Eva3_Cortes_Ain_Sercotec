@@ -10,11 +10,50 @@ type ContactPayload = {
   message?: unknown
   website?: unknown
   startedAt?: unknown
+  turnstileToken?: unknown
+}
+
+type TurnstileVerifyResponse = {
+  success: boolean
+}
+
+async function verifyTurnstileToken(token: string, ip?: string | null) {
+  const secret = process.env.TURNSTILE_SECRET_KEY
+
+  if (!secret) {
+    throw new Error('TURNSTILE_SECRET_KEY is not configured')
+  }
+
+  const body = new URLSearchParams({
+    secret,
+    response: token,
+  })
+
+  if (ip) {
+    body.set('remoteip', ip)
+  }
+
+  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body,
+    signal: AbortSignal.timeout(10000),
+  })
+
+  if (!response.ok) {
+    throw new Error('Turnstile verification request failed')
+  }
+
+  const result = (await response.json()) as TurnstileVerifyResponse
+  return result.success
 }
 
 export async function POST(request: Request) {
   try {
     const payload = (await request.json()) as ContactPayload
+    const turnstileToken = typeof payload.turnstileToken === 'string' ? payload.turnstileToken : ''
 
     const values = normalizeContactFormValues({
       name: typeof payload.name === 'string' ? payload.name : '',
@@ -28,11 +67,32 @@ export async function POST(request: Request) {
         ...values,
         website: typeof payload.website === 'string' ? payload.website : '',
         startedAt: typeof payload.startedAt === 'number' ? payload.startedAt : undefined,
+        turnstileToken,
       })
     ) {
       return Response.json(
         {
           message: 'No pudimos validar el envio. Intenta nuevamente.',
+        },
+        {status: 400}
+      )
+    }
+
+    if (!turnstileToken) {
+      return Response.json(
+        {
+          message: 'Completa la verificacion de seguridad antes de enviar.',
+        },
+        {status: 400}
+      )
+    }
+
+    const turnstilePassed = await verifyTurnstileToken(turnstileToken, request.headers.get('x-forwarded-for'))
+
+    if (!turnstilePassed) {
+      return Response.json(
+        {
+          message: 'No pudimos validar la verificacion de seguridad. Intenta nuevamente.',
         },
         {status: 400}
       )

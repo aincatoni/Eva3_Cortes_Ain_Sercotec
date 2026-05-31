@@ -40,7 +40,7 @@ La solución fue implementada con `Next.js`, `TypeScript`, `Tailwind CSS`, `Sani
 
 Abrir:
 
-- `https://eva3-cortes-ain-sercotec.vercel.app`
+- [https://eva3-cortes-ain-sercotec.vercel.app](https://eva3-cortes-ain-sercotec.vercel.app)
 
 Desde esa URL se puede revisar:
 
@@ -55,7 +55,7 @@ Desde esa URL se puede revisar:
 
 Abrir:
 
-- `https://eva3-cortes-ain-sercotec.vercel.app/studio`
+- [https://eva3-cortes-ain-sercotec.vercel.app/studio](https://eva3-cortes-ain-sercotec.vercel.app/studio)
 
 El Studio permite revisar la estructura editorial y el contenido administrable.
 
@@ -70,7 +70,7 @@ Si no se cuenta con acceso al Studio, igualmente se puede verificar el funcionam
 
 Abrir:
 
-- `https://eva3-cortes-ain-sercotec.vercel.app/api/home`
+- [https://eva3-cortes-ain-sercotec.vercel.app/api/home](https://eva3-cortes-ain-sercotec.vercel.app/api/home)
 
 Este endpoint devuelve un `JSON` generado por un `Route Handler` de `Next.js` y consulta contenido almacenado en `Sanity`.
 
@@ -240,6 +240,9 @@ Variables principales usadas actualmente:
 NEXT_PUBLIC_SANITY_PROJECT_ID=
 NEXT_PUBLIC_SANITY_DATASET=
 NEXT_PUBLIC_SANITY_API_VERSION=
+
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=
+TURNSTILE_SECRET_KEY=
 
 SUPABASE_URL=
 SUPABASE_PUBLISHABLE_KEY=

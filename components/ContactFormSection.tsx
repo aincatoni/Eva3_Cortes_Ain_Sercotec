@@ -2,16 +2,22 @@ import {type FormEvent} from 'react'
 
 import {type ContactFormErrors, type ContactFormValues} from '@/lib/contact-form'
 
+import {TurnstileWidget} from '@/components/TurnstileWidget'
+
 type ContactFormSectionProps = {
   services: Array<{_id: string; contactValue: string}>
   formValues: ContactFormValues
   formErrors: ContactFormErrors
   formMessage: string | null
+  securityError: string | null
   isSubmitting: boolean
   startedAt: number
+  turnstileSiteKey?: string
+  turnstileResetKey: number
   onSubmit: (event: FormEvent<HTMLFormElement>) => void | Promise<void>
   onFieldChange: (field: keyof ContactFormValues, value: string) => void
   onFieldBlur: (field: keyof ContactFormValues) => void
+  onTurnstileTokenChange: (token: string | null) => void
 }
 
 export function ContactFormSection({
@@ -19,11 +25,15 @@ export function ContactFormSection({
   formValues,
   formErrors,
   formMessage,
+  securityError,
   isSubmitting,
   startedAt,
+  turnstileSiteKey,
+  turnstileResetKey,
   onSubmit,
   onFieldChange,
   onFieldBlur,
+  onTurnstileTokenChange,
 }: ContactFormSectionProps) {
   return (
     <section id='contacto' className='scroll-mt-28'>
@@ -130,6 +140,16 @@ export function ContactFormSection({
             </span>
           </label>
 
+          <div className='grid gap-2'>
+            <p className='text-sm font-medium text-slate-900'>Verificacion de seguridad</p>
+            <TurnstileWidget
+              siteKey={turnstileSiteKey}
+              resetKey={turnstileResetKey}
+              onTokenChange={onTurnstileTokenChange}
+            />
+            {securityError ? <p className='text-sm font-medium text-rose-700'>{securityError}</p> : null}
+          </div>
+
           <div className='flex flex-wrap items-center justify-between gap-4'>
             <button
               className='rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4] disabled:cursor-not-allowed disabled:opacity-60'
@@ -144,7 +164,7 @@ export function ContactFormSection({
           </div>
 
           {formMessage ? (
-            <p className={`text-sm leading-7 ${Object.keys(formErrors).length > 0 ? 'text-rose-700' : 'text-emerald-700'}`}>
+            <p className={`text-sm leading-7 ${Object.keys(formErrors).length > 0 || securityError ? 'text-rose-700' : 'text-emerald-700'}`}>
               {formMessage}
             </p>
           ) : null}

@@ -39,6 +39,9 @@ export default function Home() {
     initialContactFormValues,
   );
   const [formErrors, setFormErrors] = useState<ContactFormErrors>({});
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileError, setTurnstileError] = useState<string | null>(null);
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -90,6 +93,7 @@ export default function Home() {
   const faqs = payload?.data.faqs ?? [];
   const contactInfo = payload?.data.contactInfo;
   const locationPoints = payload?.data.locationPoints ?? [];
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 
   function handleServiceSelect(value: string) {
     setFormMessage(null);
@@ -104,6 +108,15 @@ export default function Home() {
     setFormValues((current) => ({ ...current, [field]: value }));
     setFormErrors((current) => ({ ...current, [field]: undefined }));
     setFormMessage(null);
+  }
+
+  function handleTurnstileTokenChange(token: string | null) {
+    setTurnstileToken(token);
+    setTurnstileError(null);
+
+    if (token) {
+      setFormMessage(null);
+    }
   }
 
   function handleFieldBlur(field: keyof ContactFormValues) {
@@ -126,27 +139,60 @@ export default function Home() {
       return;
     }
 
+    if (!turnstileToken) {
+      setTurnstileError("Completa la verificacion de seguridad antes de enviar.");
+      setFormMessage("Completa la verificacion de seguridad antes de continuar.");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
       setFormMessage(null);
+      setTurnstileError(null);
 
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({...formValues, website: '', startedAt: formStartedAt}),
-      });
+      const controller = new AbortController();
+      const timeoutId = window.setTimeout(() => controller.abort(), 15000);
 
-      const json = (await response.json()) as {
+      let response: Response;
+      let json: {
         message?: string;
         errors?: ContactFormErrors;
-      };
+      } = {};
+
+      try {
+        response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          signal: controller.signal,
+          body: JSON.stringify({
+            ...formValues,
+            website: '',
+            startedAt: formStartedAt,
+            turnstileToken,
+          }),
+        });
+
+        const rawBody = await response.text();
+
+        if (rawBody) {
+          json = JSON.parse(rawBody) as {
+            message?: string;
+            errors?: ContactFormErrors;
+          };
+        }
+      } finally {
+        window.clearTimeout(timeoutId);
+      }
 
       if (!response.ok) {
         if (json.errors) {
           setFormErrors(json.errors);
         }
+
+        setTurnstileToken(null);
+        setTurnstileResetKey((current) => current + 1);
 
         setFormMessage(
           json.message || "No pudimos enviar tu solicitud. Intenta nuevamente.",
@@ -157,9 +203,18 @@ export default function Home() {
       setFormValues(initialContactFormValues);
       setFormErrors({});
       setFormStartedAt(Date.now());
+      setTurnstileToken(null);
+      setTurnstileResetKey((current) => current + 1);
       setFormMessage(json.message || "Solicitud enviada correctamente.");
-    } catch {
-      setFormMessage("No pudimos enviar tu solicitud. Intenta nuevamente.");
+    } catch (submissionError) {
+      setTurnstileToken(null);
+      setTurnstileResetKey((current) => current + 1);
+
+      if (submissionError instanceof DOMException && submissionError.name === "AbortError") {
+        setFormMessage("La solicitud tardó demasiado. Intenta nuevamente en unos segundos.");
+      } else {
+        setFormMessage("No pudimos enviar tu solicitud. Intenta nuevamente.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -205,11 +260,15 @@ export default function Home() {
               formValues={formValues}
               formErrors={formErrors}
               formMessage={formMessage}
+              securityError={turnstileError}
               isSubmitting={isSubmitting}
               startedAt={formStartedAt}
+              turnstileSiteKey={turnstileSiteKey}
+              turnstileResetKey={turnstileResetKey}
               onSubmit={handleFormSubmit}
               onFieldChange={handleFieldChange}
               onFieldBlur={handleFieldBlur}
+              onTurnstileTokenChange={handleTurnstileTokenChange}
             />
             {contactInfo ? <ContactFooter contactInfo={contactInfo} footerNote={siteSettings?.footerNote} /> : null}
           </>

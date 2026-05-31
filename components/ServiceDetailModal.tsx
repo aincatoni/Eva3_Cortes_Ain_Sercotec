@@ -96,7 +96,7 @@ export function ServiceDetailModal({service, onClose, onSelect}: ServiceDetailMo
                 onClick={onClose}
                 className='inline-flex rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-900 transition hover:border-[#2469b4] hover:text-[#2469b4]'
               >
-                Volver a la landing
+                Volver
               </button>
             </div>
           </div>

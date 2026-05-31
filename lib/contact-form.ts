@@ -8,6 +8,7 @@ export type ContactFormValues = {
 export type ContactFormSubmission = ContactFormValues & {
   website?: string
   startedAt?: number
+  turnstileToken?: string
 }
 
 export type ContactFormErrors = Partial<Record<keyof ContactFormValues, string>>

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import {useState} from 'react'
 
 import {type HomeData} from '@/sanity/lib/queries'
@@ -44,28 +45,48 @@ export function TestimonialCarousel({testimonials}: TestimonialCarouselProps) {
       tabIndex={0}
       onKeyDown={handleKeyDown}
     >
-      <div className='overflow-hidden'>
+      <div className='min-w-0 overflow-hidden'>
         <div
           className='flex transition-transform duration-500 ease-out'
           style={{transform: `translateX(-${currentIndex * 100}%)`}}
         >
           {testimonials.map((testimonial) => (
-            <article key={testimonial._id} className='w-full shrink-0 px-1'>
-              <div className='rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-[0_10px_30px_rgba(15,23,42,0.05)]'>
-                <p className='text-base leading-8 text-slate-700'>&ldquo;{testimonial.quote}&rdquo;</p>
-                <div className='mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 pt-4'>
-                  <div>
-                    <p className='font-semibold text-slate-950'>{testimonial.name}</p>
-                    <p className='text-sm text-slate-600'>
-                      {testimonial.business}
-                      {testimonial.commune ? ` · ${testimonial.commune}` : ''}
-                    </p>
+            <article key={testimonial._id} className='min-w-0 w-full shrink-0 px-1'>
+              <div className='min-w-0 overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-[0_10px_30px_rgba(15,23,42,0.05)] md:grid md:grid-cols-[18rem_minmax(0,1fr)]'>
+                <div className='relative min-h-[15rem] bg-slate-100 md:min-h-[18rem]'>
+                  {testimonial.image?.asset?.url ? (
+                    <Image
+                      src={testimonial.image.asset.url}
+                      alt={testimonial.image.alt || testimonial.name}
+                      fill
+                      sizes='(min-width: 1024px) 22vw, 100vw'
+                      className='object-cover object-top'
+                    />
+                  ) : (
+                    <div className='flex h-full min-h-[15rem] items-end bg-[linear-gradient(135deg,_rgba(9,17,40,1),_rgba(36,105,180,0.92))] p-6 text-white'>
+                      <span className='max-w-[12rem] text-sm font-semibold uppercase tracking-[0.18em] text-[#d7eaff]'>
+                        Testimonio del ecosistema emprendedor
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                <div className='min-w-0 flex flex-col p-6'>
+                  <p className='text-base leading-8 text-slate-700'>{testimonial.quote}</p>
+                  <div className='mt-5 border-t border-slate-200 pt-4'>
+                    <div className='min-w-0'>
+                      <p className='font-semibold text-slate-950'>{testimonial.name}</p>
+                      <p className='text-sm text-slate-600'>
+                        {testimonial.business}
+                        {testimonial.commune ? ` · ${testimonial.commune}` : ''}
+                      </p>
+                      {testimonial.sourceLabel ? (
+                        <span className='mt-3 inline-flex max-w-full rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium uppercase tracking-[0.12em] text-slate-600'>
+                          {testimonial.sourceLabel}
+                        </span>
+                      ) : null}
+                    </div>
                   </div>
-                  {testimonial.sourceLabel ? (
-                    <span className='rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-white'>
-                      {testimonial.sourceLabel}
-                    </span>
-                  ) : null}
                 </div>
               </div>
             </article>

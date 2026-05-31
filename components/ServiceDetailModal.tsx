@@ -87,7 +87,7 @@ export function ServiceDetailModal({service, onClose, onSelect}: ServiceDetailMo
               <button
                 type='button'
                 onClick={handleContact}
-                className='inline-flex rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]'
+                className='inline-flex rounded-full bg-[#091128] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]'
               >
                 Contactanos por este servicio
               </button>

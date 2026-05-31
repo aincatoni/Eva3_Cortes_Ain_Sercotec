@@ -13,8 +13,6 @@ type SiteHeaderProps = {
 export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navLabel = siteSettings?.navigationLabel || 'Menu principal'
-  const ctaTarget = siteSettings?.navCtaTarget || '#contacto'
-  const ctaLabel = siteSettings?.navCtaLabel || 'Solicitar orientacion'
 
   function handleCloseMenu() {
     setIsMenuOpen(false)
@@ -65,10 +63,6 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
           </nav>
 
           <div className='flex items-center gap-3'>
-            <a className='hidden shrink-0 whitespace-nowrap rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4] lg:inline-flex' href={ctaTarget}>
-              {ctaLabel}
-            </a>
-
             <button
               type='button'
               className='inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-950 transition hover:border-[#2469b4] hover:text-[#2469b4] lg:hidden'
@@ -77,7 +71,20 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
               aria-label={isMenuOpen ? 'Cerrar menu' : 'Abrir menu'}
               onClick={() => setIsMenuOpen((current) => !current)}
             >
-              <span className='text-xl leading-none'>{isMenuOpen ? 'x' : '+'}</span>
+              <svg aria-hidden='true' viewBox='0 0 24 24' className='h-5 w-5' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round'>
+                {isMenuOpen ? (
+                  <>
+                    <path d='M6 6L18 18' />
+                    <path d='M18 6L6 18' />
+                  </>
+                ) : (
+                  <>
+                    <path d='M4 7H20' />
+                    <path d='M4 12H20' />
+                    <path d='M4 17H20' />
+                  </>
+                )}
+              </svg>
             </button>
           </div>
         </div>
@@ -104,10 +111,6 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
                 Contacto
               </a>
             </nav>
-
-            <a className='mt-4 inline-flex w-full items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#2469b4]' href={ctaTarget} onClick={handleCloseMenu}>
-              {ctaLabel}
-            </a>
           </div>
         ) : null}
       </div>

@@ -24,7 +24,7 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
         <div className='flex items-center justify-between gap-4'>
           <div className='flex min-w-0 items-center gap-4'>
             <Image
-              src='/images/sercotec-centro-logo.png'
+              src='/images/logo-centro-negocios-sercotec.png'
               alt='Centros de Negocios Sercotec'
               width={196}
               height={68}

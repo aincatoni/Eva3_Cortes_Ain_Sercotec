@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 import {type HomeData} from '@/sanity/lib/queries'
 
 import {getMapEmbedUrl} from '@/lib/landing'
@@ -44,14 +46,26 @@ export function ContactFooter({contactInfo, footerNote}: ContactFooterProps) {
           {footerNote ? <p className='mt-8 text-sm text-slate-600'>{footerNote}</p> : null}
         </div>
 
-        <div className='overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-100'>
-          <iframe
-            title='Mapa de ubicacion del Centro de Desarrollo de Negocios Sercotec Santiago'
-            src={getMapEmbedUrl(contactInfo.address)}
-            className='h-[22rem] w-full border-0'
-            loading='lazy'
-            referrerPolicy='no-referrer-when-downgrade'
-          />
+        <div className='space-y-4'>
+          <div className='overflow-hidden rounded-[1.75rem] border border-slate-200 bg-slate-100'>
+            <iframe
+              title='Mapa de ubicacion del Centro de Desarrollo de Negocios Sercotec Santiago'
+              src={getMapEmbedUrl(contactInfo.address)}
+              className='h-[22rem] w-full border-0'
+              loading='lazy'
+              referrerPolicy='no-referrer-when-downgrade'
+            />
+          </div>
+
+          <div className='flex justify-center rounded-[1.5rem] border border-slate-200 bg-[#091128] px-6 py-6'>
+            <Image
+              src='/images/logo-sercotec-footer.png'
+              alt='Sercotec'
+              width={210}
+              height={123}
+              className='h-auto w-[10.5rem] sm:w-[12rem]'
+            />
+          </div>
         </div>
       </div>
 

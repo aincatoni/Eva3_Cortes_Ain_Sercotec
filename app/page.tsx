@@ -4,6 +4,12 @@ import Image from 'next/image'
 import {useEffect, useState} from 'react'
 
 import {ServiceCard} from '@/components/ServiceCard'
+import {
+  type ContactFormErrors,
+  type ContactFormValues,
+  initialContactFormValues,
+  validateContactForm,
+} from '@/lib/contact-form'
 import {type HomeData} from '@/sanity/lib/queries'
 
 type HomeApiResponse = {
@@ -15,56 +21,13 @@ type HomeApiResponse = {
   error?: string
 }
 
-type ContactFormValues = {
-  name: string
-  email: string
-  service: string
-  message: string
-}
-
-type ContactFormErrors = Partial<Record<keyof ContactFormValues, string>>
-
-const initialFormValues: ContactFormValues = {
-  name: '',
-  email: '',
-  service: '',
-  message: '',
-}
-
-function validateContactForm(values: ContactFormValues): ContactFormErrors {
-  const errors: ContactFormErrors = {}
-
-  if (!values.name.trim()) {
-    errors.name = 'Ingresa tu nombre.'
-  } else if (values.name.trim().length < 3) {
-    errors.name = 'El nombre debe tener al menos 3 caracteres.'
-  }
-
-  if (!values.email.trim()) {
-    errors.email = 'Ingresa tu correo.'
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email.trim())) {
-    errors.email = 'Ingresa un correo valido.'
-  }
-
-  if (!values.service) {
-    errors.service = 'Selecciona un servicio.'
-  }
-
-  if (!values.message.trim()) {
-    errors.message = 'Escribe un mensaje.'
-  } else if (values.message.trim().length < 20) {
-    errors.message = 'El mensaje debe tener al menos 20 caracteres.'
-  }
-
-  return errors
-}
-
 export default function Home() {
   const [payload, setPayload] = useState<HomeApiResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [formMessage, setFormMessage] = useState<string | null>(null)
-  const [formValues, setFormValues] = useState<ContactFormValues>(initialFormValues)
+  const [formValues, setFormValues] = useState<ContactFormValues>(initialContactFormValues)
   const [formErrors, setFormErrors] = useState<ContactFormErrors>({})
 
   useEffect(() => {
@@ -134,7 +97,7 @@ export default function Home() {
     }))
   }
 
-  function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleFormSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const nextErrors = validateContactForm(formValues)
@@ -145,9 +108,40 @@ export default function Home() {
       return
     }
 
-    setFormMessage(
-      'La experiencia de contacto ya quedo preparada con servicio preseleccionado. El envio seguro se conectara en la siguiente iteracion del plan.'
-    )
+    try {
+      setIsSubmitting(true)
+      setFormMessage(null)
+
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formValues),
+      })
+
+      const json = (await response.json()) as {
+        message?: string
+        errors?: ContactFormErrors
+      }
+
+      if (!response.ok) {
+        if (json.errors) {
+          setFormErrors(json.errors)
+        }
+
+        setFormMessage(json.message || 'No pudimos enviar tu solicitud. Intenta nuevamente.')
+        return
+      }
+
+      setFormValues(initialContactFormValues)
+      setFormErrors({})
+      setFormMessage(json.message || 'Solicitud enviada correctamente.')
+    } catch {
+      setFormMessage('No pudimos enviar tu solicitud. Intenta nuevamente.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   function getLocationTypeLabel(value: string) {
@@ -594,10 +588,11 @@ export default function Home() {
 
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <button
-                      className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-700"
+                      className="rounded-full bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:bg-cyan-700 disabled:cursor-not-allowed disabled:opacity-60"
                       type="submit"
+                      disabled={isSubmitting}
                     >
-                      Preparar solicitud
+                      {isSubmitting ? 'Enviando...' : 'Preparar solicitud'}
                     </button>
                     {formValues.service ? (
                       <span className="rounded-full bg-cyan-50 px-4 py-2 text-sm font-medium text-cyan-950">
@@ -609,7 +604,7 @@ export default function Home() {
                   {formMessage ? (
                     <p
                       className={`text-sm leading-7 ${
-                        Object.keys(formErrors).length > 0 ? 'text-rose-700' : 'text-slate-600'
+                        Object.keys(formErrors).length > 0 ? 'text-rose-700' : 'text-emerald-700'
                       }`}
                     >
                       {formMessage}

@@ -18,12 +18,31 @@ export function ContactFooter({contactInfo, footerNote}: ContactFooterProps) {
           <h2 className='mt-2 text-3xl font-semibold tracking-tight text-white'>{contactInfo.mainOfficeName}</h2>
           <div className='mt-6 space-y-4 text-sm leading-7 text-slate-300'>
             <p>
-              <a className='transition hover:text-[#8fc0f1]' href={contactInfo.mapUrl} target='_blank' rel='noreferrer'>
+              <a className='inline-flex items-center gap-2 transition hover:text-[#8fc0f1]' href={contactInfo.mapUrl} target='_blank' rel='noreferrer'>
+                <svg aria-hidden='true' viewBox='0 0 24 24' className='h-4 w-4 shrink-0' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                  <path d='M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z' />
+                  <circle cx='12' cy='10' r='2.5' />
+                </svg>
                 {contactInfo.address}
               </a>
             </p>
-            <p>{contactInfo.phone}</p>
-            <p>{contactInfo.email}</p>
+            <p>
+              <a className='inline-flex items-center gap-2 transition hover:text-[#8fc0f1]' href={`tel:${contactInfo.phone.replace(/[^\d+]/g, '')}`}>
+                <svg aria-hidden='true' viewBox='0 0 24 24' className='h-4 w-4 shrink-0' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                  <path d='M22 16.9v3a2 2 0 0 1-2.2 2A19.8 19.8 0 0 1 11.2 19a19.3 19.3 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.8 2.6a2 2 0 0 1-.4 2.1L8.2 9.8a16 16 0 0 0 6 6l1.4-1.3a2 2 0 0 1 2.1-.4c.8.4 1.7.7 2.6.8A2 2 0 0 1 22 16.9Z' />
+                </svg>
+                {contactInfo.phone}
+              </a>
+            </p>
+            <p>
+              <a className='inline-flex items-center gap-2 transition hover:text-[#8fc0f1]' href={`mailto:${contactInfo.email}`}>
+                <svg aria-hidden='true' viewBox='0 0 24 24' className='h-4 w-4 shrink-0' fill='none' stroke='currentColor' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'>
+                  <path d='M4 6h16a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z' />
+                  <path d='m22 8-10 6L2 8' />
+                </svg>
+                {contactInfo.email}
+              </a>
+            </p>
             <p>{contactInfo.hours}</p>
           </div>
           <div className='mt-6 flex flex-wrap gap-3'>

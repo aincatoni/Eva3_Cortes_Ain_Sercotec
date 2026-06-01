@@ -9,8 +9,9 @@ Este documento resume las decisiones y convenciones usadas en la landing del Cen
 - `Next.js` se usa como framework principal para la interfaz, las rutas API y la integración entre frontend, CMS y base de datos.
 - `Sanity` administra el contenido editorial.
 - `Supabase` almacena las solicitudes enviadas desde el formulario de contacto.
-- `app/page.tsx` actúa como ensamblador principal de estado y composición.
+- `app/page.tsx` debe priorizar renderizado inicial en servidor cuando el contenido principal impacta directamente el `LCP`.
 - Las secciones de la landing se separan en componentes propios dentro de `components/`.
+- La interactividad pesada o dependiente de estado debe aislarse en componentes cliente dedicados como `HomePageClient`.
 
 ## Estructura de archivos
 
@@ -82,8 +83,17 @@ Este documento resume las decisiones y convenciones usadas en la landing del Cen
 
 - Usar `next/image` para imágenes cuando sea posible.
 - Evitar cargar lógica innecesaria en la ruta principal.
+- No depender de `fetch` cliente para renderizar el contenido crítico visible del primer pantallazo si existe una alternativa de renderizado en servidor.
 - Extraer componentes para mejorar mantenibilidad sin sobrefragmentar.
 - Revisar pesos de imágenes cargadas manualmente en `Sanity` o `public/`.
+- Medir con `Lighthouse` en más de una etapa: base local y verificación final sobre producción.
+- Guardar evidencia en `JSON`, `HTML` y capturas cuando la medición forme parte de la defensa del proyecto.
+
+## Resultados observados en este proyecto
+
+- la medición base mobile detectó `LCP 6.9 s` y `TBT 210 ms`
+- tras mover la carga inicial de la home a servidor, la medición final en producción bajó a `LCP 2.1 s` y `TBT 0 ms`
+- esto confirma que la arquitectura de render puede impactar más que ajustes cosméticos o microoptimizaciones
 
 ## Contenido administrable
 
@@ -100,7 +110,6 @@ Este documento resume las decisiones y convenciones usadas en la landing del Cen
 
 ## Recomendaciones para siguientes iteraciones
 
-- agregar captcha real o servicio anti-bot externo si el sitio se publica ampliamente
 - construir panel admin para revisar solicitudes desde `Supabase`
 - documentar retrospectiva del proceso en `RETROSPECTIVA.md`
 - añadir ejemplos de uso de componentes al `README.md`

@@ -111,10 +111,11 @@ Esto deja lista la base para una futura pantalla administrativa de revisión y g
 
 Medidas anti-bot actuales:
 
+- `Cloudflare Turnstile` con validación real en backend
 - honeypot oculto
 - validación de tiempo mínimo de completado del formulario
 
-Estas medidas no reemplazan un captcha externo, pero agregan una primera capa real de protección para la evaluación.
+Estas medidas cubren protección concreta contra envíos automatizados y refuerzan el requisito de seguridad de la evaluación.
 
 ## Cómo se resuelve el requisito de consumo de endpoint y persistencia
 
@@ -162,6 +163,28 @@ Con esto se cubren simultáneamente:
 - `Sanity`
 - `Supabase`
 - `Vercel`
+
+## Evidencia visual
+
+### Landing y experiencia pública
+
+![Landing principal](../Recursos/capturas/captura_cms.png)
+
+![Vista adicional de la landing](../Recursos/capturas/SCR-20260530-upbo.png)
+
+### CMS y administración de contenido
+
+![Acceso a Sanity Studio](../Recursos/capturas/captura_cms_login.png)
+
+![Sanity Studio con contenido](../Recursos/capturas/captura_cms_01.png)
+
+![Sanity Studio con contenido adicional](../Recursos/capturas/captura_cms_02.png)
+
+### Endpoint y persistencia
+
+![Respuesta del endpoint principal](../Recursos/capturas/postman_api_home.png)
+
+![Base de datos con registros del formulario](../Recursos/capturas/base_de_datos_con_dos_formularios.png)
 
 ## Componentización actual
 
@@ -213,26 +236,48 @@ Pendiente de siguiente iteración:
 
 ## Rendimiento y Lighthouse
 
-Se dejaron reportes Lighthouse en la raíz del proyecto:
+Se dejó evidencia de rendimiento en formato `JSON`, `HTML` y capturas de pantalla.
+
+Reportes base en desarrollo:
 
 - `localhost_3000-informe_lighthouse_desktop.json`
 - `localhost_3000-informe_lighthouse_mobile.json`
 
-Hallazgos principales de la medición base:
+Reportes finales sobre producción en `Vercel`:
 
-- `desktop`: `FCP 0.2 s`, `LCP 0.9 s`, `TBT 0 ms`, `CLS 0`
-- `mobile`: `FCP 0.8 s`, `LCP 6.9 s`, `TBT 210 ms`, `CLS 0`
+- `localhost_3000-informe_lighthouse_desktop_31_05_20-55_.json`
+- `localhost_3000-informe_lighthouse_desktop_31_05_20-55_.html`
+- `localhost_3000-informe_lighthouse_mobile_31_05_20-55_.json`
+- `localhost_3000-informe_lighthouse_mobile_31_05_20-55_.html`
 
-Acciones aplicadas después de la medición:
+Capturas de apoyo:
 
-- carga inicial de la home movida a renderizado en servidor para evitar que el `h1` principal espere el `fetch` cliente
-- mantención de `next/image` para imágenes críticas y no críticas
-- feedback del formulario reforzado para que no quede bloqueado en estado de envío
+- `../Recursos/capturas/lighthouse-desktop.png`
+- `../Recursos/capturas/lighthouse-mobile.png`
 
-Nota importante para la defensa:
+![Lighthouse desktop](../Recursos/capturas/lighthouse-desktop.png)
 
-- estos reportes fueron generados en `localhost` durante desarrollo
-- para una medición final más representativa conviene repetir Lighthouse sobre el despliegue productivo en `Vercel`
+![Lighthouse mobile](../Recursos/capturas/lighthouse-mobile.png)
+
+Comparación de métricas relevantes:
+
+- medición base `desktop`: `FCP 0.2 s`, `LCP 0.9 s`, `TBT 0 ms`, `CLS 0`
+- medición final `desktop` en `Vercel`: `FCP 0.3 s`, `LCP 0.8 s`, `TBT 0 ms`, `CLS 0`
+- medición base `mobile`: `FCP 0.8 s`, `LCP 6.9 s`, `TBT 210 ms`, `CLS 0`
+- medición final `mobile` en `Vercel`: `FCP 2.1 s`, `LCP 2.1 s`, `TBT 0 ms`, `CLS 0`
+
+Mejoras aplicadas para conseguirlo:
+
+- la carga inicial de la home se movió a renderizado en servidor para que el contenido crítico no dependa del `fetch` cliente
+- la interactividad del formulario quedó aislada en `HomePageClient`, evitando penalizar la primera pintura del contenido principal
+- se mantuvo `next/image` en imágenes relevantes para optimización automática
+- se corrigió el flujo de feedback del formulario para evitar bloqueos aparentes en el estado de envío
+- se estabilizó la integración de `Turnstile` para que no se reinicializara durante los re-renderizados del formulario
+
+Lectura final de rendimiento:
+
+- `desktop` quedó en muy buen estado y se mantuvo estable
+- `mobile` mejoró de forma importante en `LCP` y `TBT`, que eran los puntos más delicados detectados en la medición inicial
 
 ## Ejecución local
 

@@ -13,6 +13,7 @@ Esta iteración cerró la base funcional de la landing del `Centro de Desarrollo
 - la protección anti-bot quedó reforzada con `Cloudflare Turnstile`, además de honeypot y tiempo mínimo de completado
 - se logró despliegue público funcional en `Vercel`
 - se generó evidencia objetiva de rendimiento mediante reportes `Lighthouse`
+- la segunda medición sobre producción confirmó mejora real en mobile después del cambio a renderizado inicial en servidor
 
 ## Problemas encontrados
 
@@ -28,6 +29,25 @@ Esta iteración cerró la base funcional de la landing del `Centro de Desarrollo
 - se reforzó el manejo de estados del formulario y el parsing de la respuesta del endpoint
 - se movió la carga inicial de la home a renderizado en servidor para reducir el costo de render y mejorar el `LCP` percibido en mobile
 - se documentaron las mediciones `Lighthouse` y su interpretación para la defensa del proyecto
+- se repitió `Lighthouse` sobre `Vercel` para validar que la mejora no solo existiera en local
+
+## Resultados de rendimiento
+
+Medición base local:
+
+- `desktop`: `FCP 0.2 s`, `LCP 0.9 s`, `TBT 0 ms`, `CLS 0`
+- `mobile`: `FCP 0.8 s`, `LCP 6.9 s`, `TBT 210 ms`, `CLS 0`
+
+Medición final en producción `Vercel`:
+
+- `desktop`: `FCP 0.3 s`, `LCP 0.8 s`, `TBT 0 ms`, `CLS 0`
+- `mobile`: `FCP 2.1 s`, `LCP 2.1 s`, `TBT 0 ms`, `CLS 0`
+
+Interpretación:
+
+- el problema crítico estaba en `mobile LCP`
+- la mejora principal vino de dejar de depender del `fetch` cliente para pintar el contenido principal de la home
+- la reducción de `TBT` a `0 ms` en mobile refuerza que la ruta principal quedó menos costosa de ejecutar en el arranque
 
 ## Aprendizajes
 
@@ -40,13 +60,12 @@ Esta iteración cerró la base funcional de la landing del `Centro de Desarrollo
 
 - cerrar la carga editorial final en `Sanity`
 - construir un panel admin para revisar y gestionar solicitudes desde `Supabase`
-- repetir `Lighthouse` sobre el entorno productivo en `Vercel` para dejar medición final más representativa
 - hacer una última pasada de pulido visual y accesibilidad con el contenido definitivo
 
 ## Plan de acción para la siguiente iteración
 
 1. completar el contenido real en `Sanity` y validar todas las secciones
 2. construir `/admin/contactos` para listar solicitudes por fecha y estado
-3. repetir `Lighthouse` en producción y comparar contra la medición local actual
+3. usar los reportes y capturas ya generados como evidencia formal de rendimiento
 4. realizar ajustes finales de accesibilidad, feedback y consistencia responsive
 5. dejar lista la documentación final de entrega con capturas o evidencia complementaria si se requiere

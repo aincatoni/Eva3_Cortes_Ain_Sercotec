@@ -51,11 +51,11 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
             <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#testimonios'>
               Testimonios
             </a>
-            <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#puntos-atencion'>
-              Sucursales
-            </a>
             <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#faq'>
               FAQ
+            </a>
+            <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#puntos-atencion'>
+              Sucursales
             </a>
             <a className='text-sm font-medium text-slate-700 transition hover:text-[#2469b4]' href='#contacto'>
               Contacto
@@ -101,11 +101,11 @@ export function SiteHeader({hero, siteSettings}: SiteHeaderProps) {
               <a className='rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-[#eef5fd] hover:text-[#2469b4]' href='#testimonios' onClick={handleCloseMenu}>
                 Testimonios
               </a>
-              <a className='rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-[#eef5fd] hover:text-[#2469b4]' href='#puntos-atencion' onClick={handleCloseMenu}>
-                Sucursales
-              </a>
               <a className='rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-[#eef5fd] hover:text-[#2469b4]' href='#faq' onClick={handleCloseMenu}>
                 FAQ
+              </a>
+              <a className='rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-[#eef5fd] hover:text-[#2469b4]' href='#puntos-atencion' onClick={handleCloseMenu}>
+                Sucursales
               </a>
               <a className='rounded-2xl px-4 py-3 text-sm font-medium text-slate-800 transition hover:bg-[#eef5fd] hover:text-[#2469b4]' href='#contacto' onClick={handleCloseMenu}>
                 Contacto

@@ -21,7 +21,7 @@ Esta iteración cerró la base funcional de la landing del `Centro de Desarrollo
 - durante la integración del captcha aparecieron reinicios del widget por re-renderizados del formulario
 - el feedback del submit no reflejaba con claridad que la solicitud ya se había guardado en `Supabase`
 - las primeras mediciones `Lighthouse` en mobile mostraron `LCP` alto, principalmente porque la home cargaba contenido inicial desde cliente
-- la carga editorial definitiva en `Sanity` todavía no está cerrada por completo
+- la carga editorial definitiva en `Sanity` fue una de las últimas tareas en cerrarse antes de la entrega
 
 ## Qué se hizo para corregirlo
 
@@ -56,16 +56,14 @@ Interpretación:
 - integrar un captcha real mejora la defensa del requisito de seguridad, pero obliga a probar bien los ciclos de render del formulario
 - el feedback visual del usuario es tan importante como la persistencia real del dato
 
-## Qué quedó pendiente
+## Qué quedó como mejora futura
 
-- cerrar la carga editorial final en `Sanity`
 - construir un panel admin para revisar y gestionar solicitudes desde `Supabase`
-- hacer una última pasada de pulido visual y accesibilidad con el contenido definitivo
+- seguir fortaleciendo accesibilidad fina en manejo de foco y anuncios para lectores de pantalla
 
 ## Plan de acción para la siguiente iteración
 
-1. completar el contenido real en `Sanity` y validar todas las secciones
-2. construir `/admin/contactos` para listar solicitudes por fecha y estado
-3. usar los reportes y capturas ya generados como evidencia formal de rendimiento
-4. realizar ajustes finales de accesibilidad, feedback y consistencia responsive
-5. dejar lista la documentación final de entrega con capturas o evidencia complementaria si se requiere
+1. construir `/admin/contactos` para listar solicitudes por fecha y estado
+2. usar los reportes y capturas ya generados como evidencia formal de rendimiento
+3. realizar mejoras puntuales de accesibilidad en modal, feedback y navegación por teclado
+4. dejar lista la documentación final de entrega con capturas o evidencia complementaria si se requiere

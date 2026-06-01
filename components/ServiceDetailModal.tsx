@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import {useEffect} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {type HomeData} from '@/sanity/lib/queries'
 
@@ -12,7 +12,11 @@ type ServiceDetailModalProps = {
 }
 
 export function ServiceDetailModal({service, onClose, onSelect}: ServiceDetailModalProps) {
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+
   useEffect(() => {
+    const previousActiveElement = document.activeElement instanceof HTMLElement ? document.activeElement : null
+
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         onClose()
@@ -21,10 +25,12 @@ export function ServiceDetailModal({service, onClose, onSelect}: ServiceDetailMo
 
     document.addEventListener('keydown', handleKeyDown)
     document.body.style.overflow = 'hidden'
+    closeButtonRef.current?.focus()
 
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = ''
+      previousActiveElement?.focus()
     }
   }, [onClose])
 
@@ -43,6 +49,7 @@ export function ServiceDetailModal({service, onClose, onSelect}: ServiceDetailMo
         onClick={(event) => event.stopPropagation()}
       >
         <button
+          ref={closeButtonRef}
           type='button'
           onClick={onClose}
           className='absolute right-5 top-5 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-950 transition hover:border-[#2469b4] hover:text-[#2469b4]'

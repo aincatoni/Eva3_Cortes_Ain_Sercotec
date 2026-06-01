@@ -168,23 +168,23 @@ Con esto se cubren simultáneamente:
 
 ### Landing y experiencia pública
 
-![Landing principal](../Recursos/capturas/captura_cms.png)
+![Landing principal](./docs/images/captura_cms.png)
 
-![Vista adicional de la landing](../Recursos/capturas/SCR-20260530-upbo.png)
+![Vista adicional de la landing](./docs/images/SCR-20260530-upbo.png)
 
 ### CMS y administración de contenido
 
-![Acceso a Sanity Studio](../Recursos/capturas/captura_cms_login.png)
+![Acceso a Sanity Studio](./docs/images/captura_cms_login.png)
 
-![Sanity Studio con contenido](../Recursos/capturas/captura_cms_01.png)
+![Sanity Studio con contenido](./docs/images/captura_cms_01.png)
 
-![Sanity Studio con contenido adicional](../Recursos/capturas/captura_cms_02.png)
+![Sanity Studio con contenido adicional](./docs/images/captura_cms_02.png)
 
 ### Endpoint y persistencia
 
-![Respuesta del endpoint principal](../Recursos/capturas/postman_api_home.png)
+![Respuesta del endpoint principal](./docs/images/postman_api_home.png)
 
-![Base de datos con registros del formulario](../Recursos/capturas/base_de_datos_con_dos_formularios.png)
+![Base de datos con registros del formulario](./docs/images/base_de_datos_con_dos_formularios.png)
 
 ## Componentización actual
 
@@ -208,6 +208,98 @@ Componentes principales actuales:
 
 Además, `app/page.tsx` ahora hace la carga inicial en servidor y delega la interactividad del formulario a `components/HomePageClient.tsx`.
 
+## Uso de componentes
+
+### `ServiceCard`
+
+Responsabilidad:
+
+- mostrar la imagen, título y descripción breve del servicio
+- abrir el detalle del servicio en modal
+- llevar al formulario con el servicio preseleccionado
+
+Ejemplo de uso:
+
+```tsx
+<ServiceCard
+  service={service}
+  onSelect={handleServiceSelect}
+  onOpenDetail={setSelectedService}
+/>
+```
+
+### `TestimonialCarousel`
+
+Responsabilidad:
+
+- renderizar testimonios de forma responsive
+- permitir navegación por botones e interacción con teclado usando flechas
+
+Ejemplo de uso:
+
+```tsx
+<TestimonialCarousel testimonials={testimonials} />
+```
+
+### `ContactFormSection`
+
+Responsabilidad:
+
+- renderizar el formulario de contacto
+- mostrar errores por campo y feedback general
+- integrar `Turnstile` y enviar datos al endpoint interno
+
+Ejemplo de uso:
+
+```tsx
+<ContactFormSection
+  services={services}
+  formValues={formValues}
+  formErrors={formErrors}
+  formMessage={formMessage}
+  securityError={turnstileError}
+  isSubmitting={isSubmitting}
+  startedAt={formStartedAt}
+  turnstileSiteKey={turnstileSiteKey}
+  turnstileResetKey={turnstileResetKey}
+  onSubmit={handleFormSubmit}
+  onFieldChange={handleFieldChange}
+  onFieldBlur={handleFieldBlur}
+  onTurnstileTokenChange={handleTurnstileTokenChange}
+/>
+```
+
+## Ejemplos de código
+
+### Consumo del endpoint principal
+
+La home obtiene su contenido desde el endpoint interno `GET /api/home`, que a su vez consulta `Sanity` desde el servidor.
+
+```ts
+const response = await fetch('/api/home')
+const payload = await response.json()
+```
+
+### Envío del formulario
+
+El formulario envía la solicitud al backend propio para validar y persistir en `Supabase`.
+
+```ts
+const response = await fetch('/api/contact', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    name,
+    email,
+    service,
+    message,
+    turnstileToken,
+  }),
+})
+```
+
 ## Estado actual del desarrollo
 
 Estado implementado:
@@ -227,12 +319,10 @@ Estado implementado:
 - mediciones Lighthouse generadas para desktop y mobile
 - carga inicial optimizada con renderizado en servidor para reducir el costo de render en mobile
 
-Pendiente de siguiente iteración:
+Lineas futuras no bloqueantes:
 
-- terminar pulido visual final de la landing
-- completar carga editorial final en `Sanity`
 - construir panel admin para revisar solicitudes guardadas en `Supabase`
-- reforzar accesibilidad final y cerrar iteración del panel admin
+- seguir reforzando accesibilidad en detalles finos del modal y anuncios dinámicos
 
 ## Rendimiento y Lighthouse
 
@@ -252,12 +342,12 @@ Reportes finales sobre producción en `Vercel`:
 
 Capturas de apoyo:
 
-- `../Recursos/capturas/lighthouse-desktop.png`
-- `../Recursos/capturas/lighthouse-mobile.png`
+- `docs/images/lighthouse-desktop.png`
+- `docs/images/lighthouse-mobile.png`
 
-![Lighthouse desktop](../Recursos/capturas/lighthouse-desktop.png)
+![Lighthouse desktop](./docs/images/lighthouse-desktop.png)
 
-![Lighthouse mobile](../Recursos/capturas/lighthouse-mobile.png)
+![Lighthouse mobile](./docs/images/lighthouse-mobile.png)
 
 Comparación de métricas relevantes:
 

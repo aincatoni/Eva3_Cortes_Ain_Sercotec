@@ -147,7 +147,11 @@ export function ContactFormSection({
               resetKey={turnstileResetKey}
               onTokenChange={onTurnstileTokenChange}
             />
-            {securityError ? <p className='text-sm font-medium text-rose-700'>{securityError}</p> : null}
+            {securityError ? (
+              <p className='text-sm font-medium text-rose-700' role='alert'>
+                {securityError}
+              </p>
+            ) : null}
           </div>
 
           <div className='flex flex-wrap items-center justify-between gap-4'>
@@ -164,7 +168,11 @@ export function ContactFormSection({
           </div>
 
           {formMessage ? (
-            <p className={`text-sm leading-7 ${Object.keys(formErrors).length > 0 || securityError ? 'text-rose-700' : 'text-emerald-700'}`}>
+            <p
+              className={`text-sm leading-7 ${Object.keys(formErrors).length > 0 || securityError ? 'text-rose-700' : 'text-emerald-700'}`}
+              role={Object.keys(formErrors).length > 0 || securityError ? 'alert' : 'status'}
+              aria-live={Object.keys(formErrors).length > 0 || securityError ? 'assertive' : 'polite'}
+            >
               {formMessage}
             </p>
           ) : null}

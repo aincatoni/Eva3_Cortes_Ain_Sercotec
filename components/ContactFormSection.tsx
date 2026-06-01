@@ -18,6 +18,7 @@ type ContactFormSectionProps = {
   onFieldChange: (field: keyof ContactFormValues, value: string) => void
   onFieldBlur: (field: keyof ContactFormValues) => void
   onTurnstileTokenChange: (token: string | null) => void
+  onTurnstileError?: (code?: string) => void
 }
 
 export function ContactFormSection({
@@ -34,6 +35,7 @@ export function ContactFormSection({
   onFieldChange,
   onFieldBlur,
   onTurnstileTokenChange,
+  onTurnstileError,
 }: ContactFormSectionProps) {
   return (
     <section id='contacto' className='scroll-mt-28'>
@@ -146,6 +148,7 @@ export function ContactFormSection({
               siteKey={turnstileSiteKey}
               resetKey={turnstileResetKey}
               onTokenChange={onTurnstileTokenChange}
+              onError={onTurnstileError}
             />
             {securityError ? (
               <p className='text-sm font-medium text-rose-700' role='alert'>

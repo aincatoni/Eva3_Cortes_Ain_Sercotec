@@ -12,7 +12,7 @@ declare global {
           sitekey: string
           callback?: (token: string) => void
           'expired-callback'?: () => void
-          'error-callback'?: () => void
+          'error-callback'?: (code?: string) => void
           theme?: 'light' | 'dark' | 'auto'
         }
       ) => string
@@ -26,9 +26,10 @@ type TurnstileWidgetProps = {
   siteKey?: string
   resetKey: number
   onTokenChange: (token: string | null) => void
+  onError?: (code?: string) => void
 }
 
-function TurnstileWidgetInner({siteKey, resetKey, onTokenChange}: TurnstileWidgetProps) {
+function TurnstileWidgetInner({siteKey, resetKey, onTokenChange, onError}: TurnstileWidgetProps) {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const widgetIdRef = useRef<string | null>(null)
   const [apiLoaded, setApiLoaded] = useState(false)
@@ -44,9 +45,12 @@ function TurnstileWidgetInner({siteKey, resetKey, onTokenChange}: TurnstileWidge
       theme: 'light',
       callback: (token) => emitTokenChange(token),
       'expired-callback': () => emitTokenChange(null),
-      'error-callback': () => emitTokenChange(null),
+      'error-callback': (code) => {
+        emitTokenChange(null)
+        onError?.(code)
+      },
     })
-  }, [apiLoaded, siteKey])
+  }, [apiLoaded, onError, siteKey])
 
   useEffect(() => {
     emitTokenChange(null)

@@ -75,6 +75,20 @@ export function HomePageClient({payload, error}: HomePageClientProps) {
     }
   }
 
+  function handleTurnstileError(code?: string) {
+    const currentHost = window.location.hostname
+    const details = code ? ` (codigo ${code})` : ''
+
+    console.error('Turnstile render error', {code, host: currentHost})
+
+    if (code === '110200') {
+      setTurnstileError(`Turnstile no esta autorizado para este dominio: ${currentHost}. Revisa los hostnames configurados en Cloudflare.${details}`)
+      return
+    }
+
+    setTurnstileError(`No pudimos cargar la verificacion de seguridad en este navegador o dominio${details}.`)
+  }
+
   function handleFieldBlur(field: keyof ContactFormValues) {
     const nextErrors = validateContactForm(formValues)
 
@@ -211,6 +225,7 @@ export function HomePageClient({payload, error}: HomePageClientProps) {
               onFieldChange={handleFieldChange}
               onFieldBlur={handleFieldBlur}
               onTurnstileTokenChange={handleTurnstileTokenChange}
+              onTurnstileError={handleTurnstileError}
             />
             {contactInfo ? <ContactFooter contactInfo={contactInfo} footerNote={siteSettings?.footerNote} /> : null}
           </>

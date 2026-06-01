@@ -27,12 +27,13 @@ La solución fue implementada con `Next.js`, `TypeScript`, `Tailwind CSS`, `Sani
 - creación de endpoints propios en `Next.js` para contenido y formulario
 - integración de `Supabase` para persistir solicitudes de contacto en la tabla `contact_requests`
 - validación cliente/servidor del formulario de contacto
-- capa inicial anti-bot con honeypot y control de tiempo mínimo de envío
+- protección anti-bot con `Cloudflare Turnstile`, honeypot y control de tiempo mínimo de envío
 - refactor de la landing en componentes reutilizables por sección y por card
 - navegación desktop y mobile por anclas dentro de la misma landing
 - carrusel de testimonios accesible y responsive
 - detalle ampliado de servicios mediante modal dentro de la landing
 - despliegue público del proyecto en `Vercel`
+- carga inicial de la home movida a renderizado en servidor para mejorar `LCP` y experiencia mobile
 
 ## Cómo revisar el proyecto
 
@@ -182,7 +183,7 @@ Componentes principales actuales:
 - `components/ContactFormSection.tsx`
 - `components/ContactFooter.tsx`
 
-Además, `app/page.tsx` quedó como componente ensamblador de estado, carga de datos y handlers del formulario.
+Además, `app/page.tsx` ahora hace la carga inicial en servidor y delega la interactividad del formulario a `components/HomePageClient.tsx`.
 
 ## Estado actual del desarrollo
 
@@ -194,20 +195,44 @@ Estado implementado:
 - endpoint `/api/contact` operativo
 - landing visual funcional conectada a `Sanity`
 - formulario conectado a `Supabase`
-- capa anti-bot inicial implementada
+- `Cloudflare Turnstile` integrado y validado en cliente/servidor
 - landing separada en componentes reutilizables
 - menú mobile implementado
 - carrusel de testimonios implementado
 - modal de detalle en servicios implementado
 - modelado CMS ya definido para las secciones principales
+- mediciones Lighthouse generadas para desktop y mobile
+- carga inicial optimizada con renderizado en servidor para reducir el costo de render en mobile
 
 Pendiente de siguiente iteración:
 
 - terminar pulido visual final de la landing
 - completar carga editorial final en `Sanity`
-- evaluar si se agregará captcha externo además de la capa anti-bot actual
 - construir panel admin para revisar solicitudes guardadas en `Supabase`
-- reforzar accesibilidad y optimización responsive
+- reforzar accesibilidad final y cerrar iteración del panel admin
+
+## Rendimiento y Lighthouse
+
+Se dejaron reportes Lighthouse en la raíz del proyecto:
+
+- `localhost_3000-informe_lighthouse_desktop.json`
+- `localhost_3000-informe_lighthouse_mobile.json`
+
+Hallazgos principales de la medición base:
+
+- `desktop`: `FCP 0.2 s`, `LCP 0.9 s`, `TBT 0 ms`, `CLS 0`
+- `mobile`: `FCP 0.8 s`, `LCP 6.9 s`, `TBT 210 ms`, `CLS 0`
+
+Acciones aplicadas después de la medición:
+
+- carga inicial de la home movida a renderizado en servidor para evitar que el `h1` principal espere el `fetch` cliente
+- mantención de `next/image` para imágenes críticas y no críticas
+- feedback del formulario reforzado para que no quede bloqueado en estado de envío
+
+Nota importante para la defensa:
+
+- estos reportes fueron generados en `localhost` durante desarrollo
+- para una medición final más representativa conviene repetir Lighthouse sobre el despliegue productivo en `Vercel`
 
 ## Ejecución local
 
@@ -271,6 +296,7 @@ Archivos de apoyo actualmente disponibles:
 
 - `README.md`: visión general del proyecto e instalación
 - `GUIA-BUENAS-PRACTICAS.md`: convenciones, accesibilidad, seguridad y estructura
+- `RETROSPECTIVA.md`: cierre de iteración, aprendizajes y acciones siguientes
 
 ## Base de datos local / estructura SQL
 
